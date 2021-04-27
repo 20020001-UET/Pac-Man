@@ -1,0 +1,331 @@
+///Pacman [Source]
+#include "Pacman.h"
+
+///Include header
+
+///Pacman class
+//Contructor:
+Pacman::Pacman(PACMAN_TYPE pacman_type) : Entity(Point(), OBJECT_PACMAN)
+{
+    if (pacman_type == PACMAN_DEFAULT)
+        type = OBJECT_PACMAN;
+    if (pacman_type == PACMAN_MS)
+        type = OBJECT_PACMAN_MS;
+
+    return;
+}
+
+//Destructor:
+Pacman::~Pacman()
+{
+    graphic = NULL;
+    timer = NULL;
+
+    return;
+}
+
+///function:
+//init:
+void Pacman::init(Graphic* _graphic, Timer* _timer, Point _stand)
+{
+    graphic = _graphic;
+    timer = _timer;
+    sprite_val = frame = 0;
+    frame_value = PACMAN_FRAME_VALUE;
+
+    stand = _stand;
+
+    setState(PACMAN_INIT_STATE);
+
+    return;
+}
+
+//loop:
+void Pacman::loop()
+{
+    handleState();
+    handlePower();
+    return;
+}
+
+//render:
+void Pacman::render()
+{
+    if (!animated)
+    {
+        graphic->draw(type, 0, dest);
+        return;
+    }
+
+    if (curState == PACMAN_RUNNING_STATE)
+    {
+        switch (getCurDirection())
+        {
+            case UP:
+                sprite_val = PACMAN_UP;
+                break;
+            case RIGHT:
+                sprite_val = PACMAN_RIGHT;
+                break;
+            case DOWN:
+                sprite_val = PACMAN_DOWN;
+                break;
+            case LEFT:
+                sprite_val = PACMAN_LEFT;
+                break;
+            default:
+                break;
+        }
+
+        sprite_val += frame / frame_value;
+
+        ++frame;
+        if (frame / frame_value >= PACMAN_ANIMTAION_FRAME)
+            frame = 0;
+    }
+
+    if (curState == PACMAN_DEATH_STATE)
+    {
+        sprite_val = frame / frame_value;
+
+        ++frame;
+        if (frame / frame_value >= PACMAN_DEATH_ANIMATION_FRAME)
+            frame = 0;
+    }
+
+    graphic->draw(type, sprite_val, dest);
+    return;
+}
+
+///state function:
+//state:
+void Pacman::setState(PACMAN_STATE newState)
+{
+    curState = newState;
+    initState();
+    return;
+}
+
+void Pacman::initState()
+{
+    switch (curState)
+    {
+        case PACMAN_INIT_STATE:
+        {
+            setPower(NORMAL_PACMAN);
+            dotEaten = 0;
+            life = 0;
+
+            type = OBJECT_PACMAN;
+            speed = PACMAN_SPEED;
+
+            setState(PACMAN_STAND_STATE);
+
+            break;
+        }
+        case PACMAN_STAND_STATE:
+        {
+            clearQueue();
+
+            frame = 0;
+            animated = false;
+            setTile(stand);
+
+            break;
+        }
+        case PACMAN_RUNNING_STATE:
+        {
+            animated = true;
+            break;
+        }
+        case PACMAN_DEATH_STATE:
+        {
+            clearQueue();
+
+            animated = true;
+            frame = 0;
+            frame_value = 16;
+            type = OBJECT_PACMAN_DEATH;
+
+            life--;
+            break;
+        }
+        default:
+            break;
+    }
+    return;
+}
+
+void Pacman::handleState()
+{
+    switch (curState)
+    {
+        case PACMAN_INIT_STATE:
+        {
+
+            break;
+        }
+        case PACMAN_STAND_STATE:
+        {
+            if (!direction.empty())
+                setState(PACMAN_RUNNING_STATE);
+            break;
+        }
+        case PACMAN_RUNNING_STATE:
+        {
+            if (!direction.empty())
+                move(direction.front().vel()*speed);
+            break;
+        }
+        case PACMAN_DEATH_STATE:
+        {
+
+            break;
+        }
+        default:
+            break;
+    }
+    return;
+}
+
+//power:
+void Pacman::setPower(PACMAN_POWER_STATE newPower)
+{
+    curPower = newPower;
+    startPower = timer->getTicks();
+    initPower();
+    return;
+}
+
+void Pacman::initPower()
+{
+    switch (curPower)
+    {
+        case NORMAL_PACMAN:
+        {
+            if (speed != PACMAN_SPEED)
+                if (checkScreen())
+                    speed = PACMAN_SPEED;
+            frame_value = PACMAN_FRAME_VALUE;
+            break;
+        }
+        case POWER_PACMAN:
+        {
+
+            break;
+        }
+        case SPEED_PACMAN:
+        {
+            if (checkScreen())
+                speed = 4;
+            frame_value = 2;
+            break;
+        }
+        case INVISIBLE_PACMAN:
+        {
+
+            break;
+        }
+        case FREE_TIME_PACMAN:
+        {
+
+            break;
+        }
+        default:
+            break;
+    }
+    return;
+}
+
+void Pacman::handlePower()
+{
+    switch (curPower)
+    {
+        case NORMAL_PACMAN:
+        {
+            if (speed != PACMAN_SPEED)
+                if (checkScreen())
+                    speed = PACMAN_SPEED;
+            break;
+        }
+        case POWER_PACMAN:
+        case SPEED_PACMAN:
+        {
+            if (checkScreen())
+                speed = 4;
+        }
+        case INVISIBLE_PACMAN:
+        case FREE_TIME_PACMAN:
+        {
+            int curTick = timer->getTicks();
+            if (curTick - startPower >= POWER_TIME[curPower])
+                setPower(NORMAL_PACMAN);
+            break;
+        }
+        default:
+            break;
+    }
+    return;
+}
+
+//playing function:
+DIRECTION Pacman::getCurDirection()
+{
+    return (direction.empty()) ? (UNSET_DIRECTION) : (direction.front().type);
+}
+
+DIRECTION Pacman::getLastDirection()
+{
+    return (direction.empty()) ? (UNSET_DIRECTION) : (direction.back().type);
+}
+
+void Pacman::setDirection(DIRECTION newDirection)
+{
+    if (curState == PACMAN_STAND_STATE)
+    {
+        if (newDirection == RIGHT || newDirection == LEFT)
+            direction.push(newDirection);
+        return;
+    }
+
+    if (!direction.empty())
+    {
+        if (direction.front().against(newDirection))
+            clearQueue();
+    }
+
+    if (direction.size() < 2)
+        direction.push(newDirection);
+    return;
+}
+
+void Pacman::earDot()
+{
+    dotEaten++;
+    return;
+}
+
+void Pacman::stop(bool canPacmanMove)
+{
+    if (direction.size() > 1)
+    {
+        if (checkScreen())
+            if (canPacmanMove)
+                direction.pop();
+    }
+    return;
+}
+
+//dot function:
+int Pacman::getDotEaten() const
+{
+    return dotEaten;
+}
+
+//queue function:
+void Pacman::clearQueue()
+{
+    while (!direction.empty())
+        direction.pop();
+    return;
+}
