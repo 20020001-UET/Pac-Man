@@ -76,6 +76,9 @@ class Labyrinth
         Point getClydeStand() const;
         bool ghostCanMove(Point tile, DIRECTION dir) const;
 
+        ///Fruit function:
+        bool fruitCanMove(Point tile, DIRECTION dir) const;
+
     private:
         ///Console
         Console* console;

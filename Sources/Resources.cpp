@@ -15,10 +15,13 @@ Resources::Resources()
     background = NULL;
     button = NULL;
     setting_button = NULL;
+    pacman = NULL;
     object = NULL;
     labyrinth = NULL;
     number = NULL;
     alphabet = NULL;
+    score = NULL;
+    fruit = NULL;
 
     for (int index = 0; index < SETTING_BUTTON_TYPE_TOTAL; index++)
         for (int sprite = 0; sprite < SETTING_BUTTON_SPRITE_TOTAL; sprite++)
@@ -78,6 +81,10 @@ void Resources::load()
     number = texture->load("Assets/Texture/number.png");
 
     //alphabet = texture->load("Assets/Texture/alphabet.png");
+
+    score = texture->load("Assets/Texture/score.png");
+
+    fruit = texture->load("Assets/Texture/fruits.png");
 
     return;
 }
@@ -250,10 +257,10 @@ void Resources::create()
 
     //Line 7
     height_sprite++;
-    for (int index = 0; index < FRUIT_TYPE_TOTAL+3; index++)
+    for (int index = 0; index < LEVEL_TYPE_TOTAL+3; index++)
     {
-        if (index < FRUIT_TYPE_TOTAL)
-            fruit[index] = {index*OBJECT_PIXEL, height_sprite*OBJECT_PIXEL, OBJECT_PIXEL, OBJECT_PIXEL};
+        if (index < LEVEL_TYPE_TOTAL)
+            level[index] = {index*OBJECT_PIXEL, height_sprite*OBJECT_PIXEL, OBJECT_PIXEL, OBJECT_PIXEL};
         else
         {
             if (index == 8)
@@ -264,6 +271,7 @@ void Resources::create()
                 pacman_life = {index*OBJECT_PIXEL, height_sprite*OBJECT_PIXEL, OBJECT_PIXEL, OBJECT_PIXEL};
         }
     }
+    console->writeLine("Created level sprites");
 
     ///Labyrinth sprites
     for (int index = 0; index < LABYRINTH_TYPE_TOTAL; index++)
@@ -283,6 +291,29 @@ void Resources::create()
     console->writeLine("Created number sprites");
 
     ///Alphabet sprites
+
+    ///Score sprite
+    cnt = 0;
+    for (int row = 0; row < 4; row++)
+    {
+        for (int col = 0; col < 4; col++)
+        {
+            score_sprite[cnt] = {col*SCORE_WIDTH, row*SCORE_HEIGHT, SCORE_WIDTH, SCORE_HEIGHT};
+            cnt++;
+        }
+    }
+    console->writeLine("Created score sprites");
+
+    ///Fruit sprite
+    for (int index = 0; index < FRUIT_TYPE_TOTAL; index++)
+    {
+        for (int sprite = 0; sprite < FRUIT_SPRITE_TOTAL-1; sprite++)
+        {
+            fruit_sprite[index][sprite] = {sprite*FRUIT_WIDTH, index*FRUIT_HEIGHT, FRUIT_WIDTH, FRUIT_HEIGHT};
+        }
+        fruit_sprite[index][FRUIT_SPRITE_TOTAL-1] = fruit_sprite[index][1];
+    }
+    console->writeLine("Created fruits sprites");
 
     return;
 }
@@ -315,6 +346,12 @@ SDL_Texture* Resources::getTexture(const RESOURCES_TYPE resources_type)
             tmpTexture = number;
             break;
         case ALPHABET:
+            break;
+        case SCORE:
+            tmpTexture = score;
+            break;
+        case FRUIT:
+            tmpTexture = fruit;
             break;
         default:
             break;
@@ -385,8 +422,8 @@ SDL_Rect Resources::getSprite(const OBJECT_TYPE object_type, const int sprite_va
         case OBJECT_DOT:
             tmpRect = dot[sprite_val];
             break;
-        case OBJECT_FRUIT:
-            tmpRect = fruit[sprite_val];
+        case OBJECT_LEVEL:
+            tmpRect = level[sprite_val];
             break;
         case OBJECT_BELL:
             tmpRect = bell;
@@ -417,6 +454,20 @@ SDL_Rect Resources::getSprite(const NUMBER_TYPE number_type, const int num)
     return tmpRect;
 }
 
+SDL_Rect Resources::getSprite(const SCORE_TYPE score_type, const int sprite_val)
+{
+    SDL_Rect tmpRect = {0, 0, 0, 0};
+    tmpRect = score_sprite[sprite_val];
+    return tmpRect;
+}
+
+SDL_Rect Resources::getSprite(const FRUIT_TYPE fruit_type, const int sprite_val)
+{
+    SDL_Rect tmpRect = {0, 0, 0, 0};
+    tmpRect = fruit_sprite[fruit_type][sprite_val];
+    return tmpRect;
+}
+
 //free:
 void Resources::free()
 {
@@ -431,11 +482,26 @@ void Resources::free()
     SDL_DestroyTexture(setting_button);
     setting_button = NULL;
 
+    SDL_DestroyTexture(pacman);
+    pacman = NULL;
+
     SDL_DestroyTexture(object);
     object = NULL;
 
     SDL_DestroyTexture(labyrinth);
     labyrinth = NULL;
+
+    SDL_DestroyTexture(number);
+    number = NULL;
+
+    SDL_DestroyTexture(alphabet);
+    alphabet = NULL;
+
+    SDL_DestroyTexture(score);
+    score = NULL;
+
+    SDL_DestroyTexture(fruit);
+    score = NULL;
 
     return;
 }

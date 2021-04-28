@@ -12,6 +12,7 @@
 
 ///System config
 const std::string SYSTEM_CONFIG_PATH = "system.config";
+const std::string SYSTEM_HIGHSCORE_PATH = "highscore.dat";
 
 ///Volume setting
 const int VOLUME_SETTING_TOTAL = 11;

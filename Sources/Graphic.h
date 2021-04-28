@@ -32,10 +32,12 @@ class Graphic
         void draw(const SETTING_BUTTON_TYPE setting_button_type, const bool clickable, const int curState, const SDL_Rect setting_button_dest);
         void draw(const OBJECT_TYPE object_type, const int sprite_val, const SDL_Rect object_dest);
         void draw(const LABYRINTH_TYPE labyrinth_type, const SDL_Rect labyrinth_dest);
+        void draw(const FRUIT_TYPE fruit_type, const int sprite_val, const SDL_Rect fruit_dest);
 
         //render text:
         void renderNumber(const NUMBER_TYPE number_type, const int number, const Point dest_point);
         void renderText(const std::string& text, const Point dest_point);
+        void renderScore(const int sprite_val, const Point score_point);
 
         //set viewport:
         void setViewPort(SDL_Rect viewport);

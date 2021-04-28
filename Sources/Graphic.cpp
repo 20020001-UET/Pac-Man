@@ -116,11 +116,28 @@ void Graphic::draw(const LABYRINTH_TYPE labyrinth_type, const SDL_Rect labyrinth
     return;
 }
 
+void Graphic::draw(const FRUIT_TYPE fruit_type, const int sprite_val, const SDL_Rect fruit_dest)
+{
+    texture->draw(resources->getTexture(RESOURCES_TYPE::FRUIT),
+                  resources->getSprite(fruit_type, sprite_val),
+                  fruit_dest);
+    return;
+}
+
 void Graphic::renderNumber(const NUMBER_TYPE number_type, const int number, const Point dest_point)
 {
     SDL_Rect dest = {dest_point.x, dest_point.y, NUMBER_WIDTH, NUMBER_HEIGHT};
     texture->draw(resources->getTexture(RESOURCES_TYPE::NUMBER),
                   resources->getSprite(number_type, number),
+                  dest);
+    return;
+}
+
+void Graphic::renderScore(const int sprite_val, const Point score_dest)
+{
+    SDL_Rect dest = {score_dest.x, score_dest.y, SCORE_WIDTH, SCORE_HEIGHT};
+    texture->draw(resources->getTexture(RESOURCES_TYPE::SCORE),
+                  resources->getSprite(SCORE_DEFAULT, sprite_val),
                   dest);
     return;
 }

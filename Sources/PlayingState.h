@@ -14,6 +14,7 @@
 #include "Inky.h"
 #include "Clyde.h"
 #include "GameStatus.h"
+#include "Fruit.h"
 
 ///States of playing
 enum STATE_OF_PLAYING
@@ -108,6 +109,7 @@ class PlayingState:
         Pinky* pinky;
         Inky* inky;
         Clyde* clyde;
+        Fruit* fruit;
 
         //Dot count
         int cur_dot_count;

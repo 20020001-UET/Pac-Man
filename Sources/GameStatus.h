@@ -2,14 +2,46 @@
 #ifndef GAME_STATUS_H_
 #define GAME_STATUS_H_
 
+#include "Console.h"
 #include "Pacman.h"
 #include "Graphic.h"
 #include "Timer.h"
+#include "System.h"
+#include "Ghost.h"
+#include <set>
+#include <vector>
 
 const NUMBER_TYPE NUMBER_TYPE_AT[NUMBER_TYPE_TOTAL] = { NUMBER_BLUE, NUMBER_DEFAULT };
 
 const int GAMESTATUS_FRAME_VALUE = 5;
 const int SCORE_ANIMATED_TIME = 2500;
+
+enum UPDATE_SCORE
+{
+    UPDATE_SCORE_NORMAL_DOT = 0,
+    UPDATE_SCORE_BIG_DOT,
+    UPDATE_SCORE_EAT_GHOST,
+    UPDATE_SCORE_EAT_FRUIT,
+    UPDATE_SCORE_TOTAL
+};
+const Uint32 SCORE_NORMAL_DOT = 10;
+const Uint32 SCORE_BIG_DOT = 50;
+const Uint32 SCORE_EAT_GHOST_VALUE[GHOST_TYPE_TOTAL*2] = {200, 400, 800, 1600, 3200, 6400, 12800, 25600};
+const Uint32 SCORE_EAT_FRUIT_VALUE[FRUIT_TYPE_TOTAL] = {500, 1000, 2000, 4000, 8000, 16000, 32000, 64000};
+
+const int SCORE_TIME = 500;
+
+struct ScoreObject
+{
+    Point screen;
+    Uint32 start;
+    int score_sprite;
+    ScoreObject(Point _screen, Uint32 _start, int _score_sprite) :
+        screen(_screen), start(_start), score_sprite(_score_sprite)
+    {
+
+    };
+};
 
 class GameStatus
 {
@@ -24,21 +56,33 @@ class GameStatus
         void init(Pacman* _pacman, Graphic* _graphic, Timer* _timer, Point _highscore_point, Point _score_point, Point _life_point, Point _level_point);
 
         //load highscore
+        void load(std::string path = SYSTEM_HIGHSCORE_PATH);
 
-        //update level
+        //save highscore
+        void save(std::string path = SYSTEM_HIGHSCORE_PATH);
+
+        ///push score
+        void updateScore();
+        void pushScore(const UPDATE_SCORE update_score, const Point screen);
+        void setGhostEaten(int updateValue = 0);
 
         ///update loop
         void update();
 
         void render();
+        void renderScore();
 
         ///update animation
         void setAnimated(bool _animated = true);
 
-        ///update level
+        ///level
+        int getLevel();
         void updateLevel();
 
     private:
+        ///Console
+        Console* console;
+
         ///Pacman
         Pacman* pacman;
 
@@ -46,7 +90,9 @@ class GameStatus
         Graphic* graphic;
         Timer* timer;
 
-        Uint16 score, bonus, highscore;
+        ///Highscore
+        std::multiset<Uint32, std::greater<Uint32>> highscore_set;
+        Uint32 score, bonus, highscore;
         int score_state;
         int pacman_life;
         int level;
@@ -61,6 +107,10 @@ class GameStatus
         bool animated;
         Uint32 startAnimated;
         int frame, frame_value;
+
+        ///Render Score
+        int curGhostEaten;
+        std::vector<ScoreObject> scoreObject;
 
 };
 

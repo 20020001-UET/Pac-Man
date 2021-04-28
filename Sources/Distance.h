@@ -8,7 +8,7 @@
 
 namespace DISTANCE
 {
-    float Euclidean(const Point& first, const Point& second);
+    int Euclidean(const Point& first, const Point& second);
     float Euclidean(const FPoint& first, const FPoint& second);
     int Manhattan(const Point& first, const Point& second);
 }

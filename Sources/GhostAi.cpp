@@ -108,10 +108,10 @@ DIRECTION calcDirection(Ghost* ghost, Labyrinth* labyrinth)
             newTile = ghost->getTile() + DIRECTION_VALUE[i];
 
             ///Euclidean distance
-            //dis = DISTANCE::Euclidean(newTile, ghost->getTarget());
+            dis = DISTANCE::Euclidean(newTile, ghost->getTarget());
 
             ///Manhattan distance
-            dis = DISTANCE::Manhattan(newTile, ghost->getTarget());
+            //dis = DISTANCE::Manhattan(newTile, ghost->getTarget());
         }
 
         if (minDis > dis)
@@ -147,26 +147,29 @@ void handleGhostMove(Ghost* ghost, Labyrinth* labyrinth)
     return;
 }
 
-bool handleGhostHit(Ghost* ghost, Pacman* pacman)
+HIT_VALUE handleGhostHit(Ghost* ghost, Pacman* pacman)
 {
     if (ghost->getBehavior() == GHOST_STAND)
-        return false;
+        return UNHIT;
 
     if (ghost->checkCollision(pacman))
     {
         if (ghost->getBehavior() == GHOST_FRIGHTENED)
         {
-            if (ghost->getTile() == pacman->getTile())
-            {
-                pacman->setState(PACMAN_EATING_STATE);
-                ghost->setBehavior(GHOST_BEING_EATEN);
-            }
+        //if (ghost->getTile() == pacman->getTile())
+
+            pacman->setState(PACMAN_EATING_STATE);
+            ghost->setBehavior(GHOST_BEING_EATEN);
+            return GHOST_HIT_PACMAN;
+
+        //return UNHIT;
         }
-        else
-            if (ghost->getBehavior() != GHOST_EATEN && ghost->getBehavior() != GHOST_BEING_EATEN && ghost->getBehavior() != GHOST_UNSET)
-            {
-                return true;
-            }
+
+        if (ghost->getBehavior() != GHOST_EATEN && ghost->getBehavior() != GHOST_BEING_EATEN && ghost->getBehavior() != GHOST_UNSET)
+        {
+            return PACMAN_HIT_GHOST;
+        }
     }
-    return false;
+
+    return UNHIT;
 }

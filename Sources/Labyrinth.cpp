@@ -295,6 +295,16 @@ bool Labyrinth::ghostCanMove(Point tile, DIRECTION dir) const
     return false;
 }
 
+///Fruit function:
+bool Labyrinth::fruitCanMove(Point tile, DIRECTION dir) const
+{
+    if (checkIn(tile + DIRECTION_VALUE[dir]))
+        return (getData(tile + DIRECTION_VALUE[dir]) != WALL_DATA && getData(tile + DIRECTION_VALUE[dir]) != GHOST_HOUSE_DATA);
+    if (checkIn(tile))
+        return (getData(tile) != WALL_DATA && getData(tile) != GHOST_HOUSE_DATA);
+    return false;
+}
+
 ///Check point
 bool Labyrinth::checkIn(Point tile) const
 {

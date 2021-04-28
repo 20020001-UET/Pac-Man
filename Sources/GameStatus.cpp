@@ -1,14 +1,19 @@
 ///Game Status [Source]
 #include "GameStatus.h"
 
-#include "sstream"
-#include "string"
+///Include header
+#include <fstream>
+#include <sstream>
+#include <string>
 
 //Constructor:
 GameStatus::GameStatus()
 {
+    console = new Console("GameStatus");
     pacman = NULL;
     graphic = NULL;
+
+    scoreObject.clear();
 
     return;
 }
@@ -16,8 +21,12 @@ GameStatus::GameStatus()
 //Destructor:
 GameStatus::~GameStatus()
 {
+    delete console;
+    console = NULL;
     pacman = NULL;
     graphic = NULL;
+
+    scoreObject.clear();
 
     return;
 }
@@ -42,15 +51,151 @@ void GameStatus::init(Pacman* _pacman, Graphic* _graphic, Timer* _timer, Point _
     frame = 0;
     frame_value = GAMESTATUS_FRAME_VALUE;
 
+    curGhostEaten = 0;
+
+    console->writeLine("Initialized done!");
+
+    return;
+}
+
+///load highscore
+void GameStatus::load(std::string path)
+{
+    std::ifstream highscore_file(path);
+
+    if (highscore_file.good())
+    {
+        int total;
+        highscore_file >> total;
+        while (total--)
+        {
+            Uint32 tmp;
+            highscore_file >> tmp;
+            highscore_set.insert(tmp);
+        }
+        if (!highscore_set.empty())
+            highscore = (*highscore_set.begin());
+        console->writeLine("Loading highscore done!");
+    }
+    else
+    {
+        highscore = 0;
+        console->writeLine("Could not read highscore file!");
+    }
+
+    highscore_file.close();
+    return;
+}
+
+///save highscore
+void GameStatus::save(std::string path)
+{
+    std::ofstream highscore_file(path);
+
+    if (highscore_file.good())
+    {
+        highscore_set.insert(score);
+
+        if (highscore_set.size() >= 10)
+        {
+            highscore_file << "10\n";
+        }
+        else
+        {
+            highscore_file << highscore_set.size() << '\n';
+        }
+
+        int cnt = 0;
+        std::multiset<Uint32, std::greater<Uint32>>::iterator it;
+        for (it = highscore_set.begin(); it != highscore_set.end(); ++it)
+        {
+            Uint32 tmp = (*it);
+
+            cnt++;
+            if (cnt <= 10)
+            {
+                highscore_file << tmp << '\n';
+            }
+            else
+                break;
+        }
+        console->writeLine("Saving highscore done!");
+    }
+    else
+    {
+        highscore = 0;
+        console->writeLine("Could not write highscore file!");
+    }
+
+    return;
+}
+
+///push score
+void GameStatus::updateScore()
+{
+    if (!scoreObject.empty())
+    {
+        std::vector<ScoreObject>::iterator it;
+        do
+        {
+            it = scoreObject.begin();
+
+            int timePast = timer->getTicks() - it->start;
+            if (timePast >= SCORE_TIME)
+            {
+                scoreObject.erase(it);
+            }
+            else
+                break;
+
+            if (scoreObject.empty())
+                break;
+        } while (true);
+
+    }
+    return;
+}
+
+void GameStatus::pushScore(const UPDATE_SCORE update_score, const Point screen)
+{
+    if (update_score == UPDATE_SCORE_NORMAL_DOT)
+        bonus += SCORE_NORMAL_DOT;
+    if (update_score == UPDATE_SCORE_BIG_DOT)
+        bonus += SCORE_BIG_DOT;
+
+    int score_sprite = 0;
+    if (update_score == UPDATE_SCORE_EAT_GHOST)
+    {
+        bonus += SCORE_EAT_GHOST_VALUE[curGhostEaten];
+        score_sprite = SCORE_EAT_GHOST + curGhostEaten;
+        curGhostEaten++;
+    }
+
+    if (update_score == UPDATE_SCORE_EAT_FRUIT)
+    {
+        bonus += SCORE_EAT_FRUIT_VALUE[level];
+        score_sprite = SCORE_EAT_FRUIT + level;
+    }
+
+    scoreObject.push_back(ScoreObject(screen, timer->getTicks(), score_sprite));
+
+    return;
+}
+
+void GameStatus::setGhostEaten(int updateValue)
+{
+    curGhostEaten = updateValue;
     return;
 }
 
 ///update loop
 void GameStatus::update()
 {
+    updateScore();
+
     score = pacman->getDotEaten()*10 + bonus;
 
-    if (score / 1000 > score_state && !animated)
+    if ((int)(score / 1000) > score_state && !animated)
     {
         animated = true;
         startAnimated = timer->getTicks();
@@ -74,7 +219,6 @@ void GameStatus::render()
             frame = 0;
     }
 
-
     std::stringstream ss;
     std::string num;
     Point dest;
@@ -94,6 +238,7 @@ void GameStatus::render()
     }
 
     //render highscore
+    ss.clear();
     ss << highscore;
     ss >> num;
     while (num.size() < 8)
@@ -124,7 +269,7 @@ void GameStatus::render()
     {
         if (index >= 0)
         {
-            graphic->draw(OBJECT_FRUIT, index, destination);
+            graphic->draw(OBJECT_LEVEL, index, destination);
         }
         destination.x += OBJECT_PIXEL;
     }
@@ -143,6 +288,19 @@ void GameStatus::render()
     return;
 }
 
+void GameStatus::renderScore()
+{
+    //render score in game
+    if (!scoreObject.empty())
+    {
+        for (size_t index = 0; index < scoreObject.size(); index++)
+        {
+            graphic->renderScore(scoreObject[index].score_sprite, scoreObject[index].screen - Point(RESOURCES_PIXEL/2, RESOURCES_PIXEL/2));
+        }
+    }
+    return;
+}
+
 ///update animation
 void GameStatus::setAnimated(bool _animated)
 {
@@ -150,7 +308,12 @@ void GameStatus::setAnimated(bool _animated)
     return;
 }
 
-///update level
+///level
+int GameStatus::getLevel()
+{
+    return level;
+}
+
 void GameStatus::updateLevel()
 {
     level++;

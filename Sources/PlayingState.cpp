@@ -3,6 +3,7 @@
 
 ///Include header
 #include "GhostAi.h"
+#include "FruitAi.h"
 #include <random>
 #include <ctime>
 
@@ -26,6 +27,8 @@ PlayingState::PlayingState() : State()
     inky = new Inky;
 
     clyde = new Clyde;
+
+    fruit = new Fruit;
 
     gameStatus = new GameStatus;
 
@@ -56,6 +59,9 @@ PlayingState::~PlayingState()
     delete clyde;
     clyde = NULL;
 
+    delete fruit;
+    fruit = NULL;
+
     delete gameStatus;
     gameStatus = NULL;
 
@@ -81,6 +87,8 @@ void PlayingState::init(System* _system)
     pinky->init(system->graphic, system->timer, labyrinth->getGhostStart(), labyrinth->getPinkyStand(), Point(0, -1));
     inky->init(system->graphic, system->timer, labyrinth->getGhostStart(), labyrinth->getInkyStand(), Point(27, 32));
     clyde->init(system->graphic, system->timer, labyrinth->getGhostStart(), labyrinth->getClydeStand(), Point(0, 32));
+
+    fruit->init(system->graphic, system->timer, Point(28, 14), Point(14, 17));
 
     gameStatus->init(pacman, system->graphic, system->timer, HIGHSCORE_POINT, SCORE_POINT, LIFE_POINT, LEVEL_POINT);
 
@@ -114,11 +122,15 @@ void PlayingState::render()
     system->graphic->setViewPort(PLAYING_VIEWPORT);
     labyrinth->render();
 
+    fruit->render();
+
     pacman->render();
     blinky->render();
     pinky->render();
     inky->render();
     clyde->render();
+
+    gameStatus->renderScore();
 
     return;
 }
@@ -199,6 +211,8 @@ void PlayingState::initState()
         {
             system->audio->play(MUSIC_TYPE::GAME_START);
             //Init object. . .
+            gameStatus->load();
+
             labyrinth->setAnimated(true);
             gameStatus->setAnimated(true);
 
@@ -207,6 +221,9 @@ void PlayingState::initState()
             inky->setBehavior(GHOST_INIT);
             clyde->setBehavior(GHOST_INIT);
             pacman->setState(PACMAN_INIT_STATE);
+
+            fruit->setType(gameStatus->getLevel());
+            fruit->setState(FRUIT_INIT);
 
             cur_dot_count = 0;
 
@@ -247,6 +264,9 @@ void PlayingState::initState()
             inky->setBehavior(GHOST_INIT);
             clyde->setBehavior(GHOST_INIT);
             pacman->setState(PACMAN_NEW_STATE);
+
+            fruit->setType(gameStatus->getLevel());
+            fruit->setState(FRUIT_INIT);
 
             cur_dot_count = 0;
 
@@ -299,6 +319,19 @@ void PlayingState::handleState()
             if (pacman->getState() == PACMAN_EATING_STATE)
             {
                 pacman->loop();
+
+                if (blinky->getBehavior() == GHOST_EATEN || blinky->getBehavior() == GHOST_REBORN)
+                    blinky->loop();
+
+                if (pinky->getBehavior() == GHOST_EATEN || pinky->getBehavior() == GHOST_REBORN)
+                    pinky->loop();
+
+                if (inky->getBehavior() == GHOST_EATEN || inky->getBehavior() == GHOST_REBORN)
+                    inky->loop();
+
+                if (clyde->getBehavior() == GHOST_EATEN || clyde->getBehavior() == GHOST_REBORN)
+                    clyde->loop();
+
                 break;
             }
 
@@ -327,6 +360,7 @@ void PlayingState::handleState()
                             pinky->setBehavior(GHOST_FRIGHTENED);
                             inky->setBehavior(GHOST_FRIGHTENED);
                             clyde->setBehavior(GHOST_FRIGHTENED);
+                            gameStatus->setGhostEaten();
                             break;
                         }
                         case SPEED_DOT:
@@ -372,28 +406,60 @@ void PlayingState::handleState()
             handleGhostMove(inky, labyrinth);
             handleGhostMove(clyde, labyrinth);
 
-            if (handleGhostHit(blinky, pacman))
+            switch (handleGhostHit(blinky, pacman))
             {
-                setState(END_GAME);
-                break;
+                case PACMAN_HIT_GHOST:
+                    setState(END_GAME);
+                    break;
+                case GHOST_HIT_PACMAN:
+                    gameStatus->pushScore(UPDATE_SCORE_EAT_GHOST, blinky->getScreen());
+                    break;
+                default:
+                    break;
             }
 
-            if (handleGhostHit(pinky, pacman))
+            switch (handleGhostHit(pinky, pacman))
             {
-                setState(END_GAME);
-                break;
+                case PACMAN_HIT_GHOST:
+                    setState(END_GAME);
+                    break;
+                case GHOST_HIT_PACMAN:
+                    gameStatus->pushScore(UPDATE_SCORE_EAT_GHOST, pinky->getScreen());
+                    break;
+                default:
+                    break;
             }
 
-            if (handleGhostHit(inky, pacman))
+            switch (handleGhostHit(inky, pacman))
             {
-                setState(END_GAME);
-                break;
+                case PACMAN_HIT_GHOST:
+                    setState(END_GAME);
+                    break;
+                case GHOST_HIT_PACMAN:
+                    gameStatus->pushScore(UPDATE_SCORE_EAT_GHOST, inky->getScreen());
+                    break;
+                default:
+                    break;
             }
 
-            if (handleGhostHit(clyde, pacman))
+            switch (handleGhostHit(clyde, pacman))
             {
-                setState(END_GAME);
-                break;
+                case PACMAN_HIT_GHOST:
+                    setState(END_GAME);
+                    break;
+                case GHOST_HIT_PACMAN:
+                    gameStatus->pushScore(UPDATE_SCORE_EAT_GHOST, clyde->getScreen());
+                    break;
+                default:
+                    break;
+            }
+
+            handleFruitMove(fruit, labyrinth);
+
+            if (handleFruitHit(fruit, pacman))
+            {
+                gameStatus->pushScore(UPDATE_SCORE_EAT_FRUIT, fruit->getScreen());
+                fruit->setState(FRUIT_STAND);
             }
 
             if (!system->audio->isPlayingChannel(1))
@@ -408,6 +474,9 @@ void PlayingState::handleState()
 
             if (cur_dot_count >= 150 && !clyde->isOutGhostHouse())
                 clyde->setBehavior(GHOST_SCATTER);
+
+            if (cur_dot_count >= 200 && !fruit->isOutOfStandPosition())
+                fruit->setState(FRUIT_MOVING);
 
             if (labyrinth->isDotOver())
             {

@@ -7,9 +7,9 @@
 #define SQR(a) a*a
 
 ///Distance namespace
-float DISTANCE::Euclidean(const Point& first, const Point& second)
+int DISTANCE::Euclidean(const Point& first, const Point& second)
 {
-    return sqrt(SQR(abs(first.x - second.x)) + SQR(abs(first.y - second.y)));
+    return SQR(abs(first.x - second.x)) + SQR(abs(first.y - second.y));
 }
 
 float DISTANCE::Euclidean(const FPoint& first, const FPoint& second)

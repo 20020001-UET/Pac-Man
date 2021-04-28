@@ -24,6 +24,8 @@ enum RESOURCES_TYPE
     LABYRINTH,
     NUMBER,
     ALPHABET,
+    SCORE,
+    FRUIT,
     RESOURCES_TYPE_TOTAL
 };
 
@@ -111,9 +113,10 @@ enum OBJECT_TYPE
     OBJECT_EATEN_GHOST,
     OBJECT_PACMAN_DEATH,
     OBJECT_DOT,
-    OBJECT_FRUIT,
+    OBJECT_LEVEL,
     OBJECT_BELL,
     OBJECT_KEY,
+    OBJECT_FRUIT,
     OBJECT_PACMAN_LIFE,
     OBJECT_TYPE_TOTAL
 };
@@ -161,17 +164,17 @@ enum DOT_SPRITE
     DOT_SPRITE_TOTAL = 11
 };
 
-enum FRUIT_TYPE
+enum LEVEL_TYPE
 {
-    FRUIT_CHERRY = 0,
-    FRUIT_STAWBERRY,
-    FRUIT_ORANGE,
-    FRUIT_APPLE,
-    FRUIT_MELON,
-    FRUIT_BANANA,
-    FRUIT_WATER_MELON,
-    FRUIT_MANGO,
-    FRUIT_TYPE_TOTAL
+    LEVEL_CHERRY = 0,
+    LEVEL_STAWBERRY,
+    LEVEL_ORANGE,
+    LEVEL_APPLE,
+    LEVEL_MELON,
+    LEVEL_BANANA,
+    LEVEL_WATER_MELON,
+    LEVEL_MANGO,
+    LEVEL_TYPE_TOTAL
 };
 
 ///Labyrinth
@@ -204,6 +207,35 @@ enum ALPHABET_TYPE
     ALPHABET_DEFAULT = 0,
     ALPHABET_BLUE,
     ALPHABET_TYPE_TOTAL
+};
+
+///Score
+const int SCORE_WIDTH = 32*3;
+const int SCORE_HEIGHT = 16*3;
+enum SCORE_TYPE
+{
+    SCORE_DEFAULT = -1,
+    SCORE_EAT_GHOST = 0,
+    SCORE_EAT_FRUIT = 8,
+    SCORE_TYPE_TOTAL = 16
+};
+
+///Fruit
+const int FRUIT_WIDTH = 16*3;
+const int FRUIT_HEIGHT = 16*3;
+const int FRUIT_ANIMTAION_FRAME = 4;
+const int FRUIT_SPRITE_TOTAL = 4;
+enum FRUIT_TYPE
+{
+    FRUIT_CHERRY = 0,
+    FRUIT_STAWBERRY,
+    FRUIT_ORANGE,
+    FRUIT_APPLE,
+    FRUIT_MELON,
+    FRUIT_BANANA,
+    FRUIT_WATER_MELON,
+    FRUIT_MANGO,
+    FRUIT_TYPE_TOTAL
 };
 
 ///Resources class
@@ -242,6 +274,8 @@ class Resources
         SDL_Rect getSprite(const OBJECT_TYPE object_type, const int sprite_val = 0);
         SDL_Rect getSprite(const LABYRINTH_TYPE labyrinth_type);
         SDL_Rect getSprite(const NUMBER_TYPE number_type, const int num);
+        SDL_Rect getSprite(const SCORE_TYPE score_type, const int sprite_val);
+        SDL_Rect getSprite(const FRUIT_TYPE fruit_type, const int sprite_val = 0);
 
     private:
         ///Console
@@ -256,6 +290,8 @@ class Resources
         SDL_Texture* labyrinth;
         SDL_Texture* number;
         SDL_Texture* alphabet;
+        SDL_Texture* score;
+        SDL_Texture* fruit;
 
         ///Sprites
         SDL_Rect background_sprite[BACKGROUND_TYPE_TOTAL];
@@ -273,11 +309,13 @@ class Resources
         SDL_Rect clyde[GHOST_SPRITE_TOTAL];
         SDL_Rect pacman_death[PACMAN_DEATH_SPRITE_TOTAL];
         SDL_Rect dot[DOT_SPRITE_TOTAL];
-        SDL_Rect fruit[FRUIT_TYPE_TOTAL];
+        SDL_Rect level[FRUIT_TYPE_TOTAL];
         SDL_Rect bell, key, pacman_life;
         SDL_Rect labyrinth_sprite[LABYRINTH_TYPE_TOTAL];
         SDL_Rect number_sprite[NUMBER_TYPE_TOTAL][NUMBER_TOTAL];
         SDL_Rect alphabet_sprite[ALPHABET_TYPE_TOTAL][ALPHABET_TOTAL];
+        SDL_Rect score_sprite[SCORE_TYPE_TOTAL];
+        SDL_Rect fruit_sprite[FRUIT_TYPE_TOTAL][FRUIT_SPRITE_TOTAL];
 
         ///Texture
         Texture* texture;

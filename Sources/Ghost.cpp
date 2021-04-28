@@ -30,7 +30,7 @@ Ghost::Ghost(GHOST_TYPE _ghost_type, Point _tile) : Entity()
             break;
     }
 
-        tile = _tile;
+    tile = _tile;
     update();
 
     return;
