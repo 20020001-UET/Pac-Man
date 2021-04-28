@@ -164,7 +164,7 @@ Việc di chuyển của Ghost khá đơn giản:
 
 ### Inky
 
-###Clyde
+### Clyde
 
 ## Presentation
 1. Chơi thử demo
