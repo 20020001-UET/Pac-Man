@@ -44,9 +44,9 @@ Yêu cầu cho bài tập lớn là:
 ## References
 Để chuẩn bị cho bài tập lớn em đã:
 - Đoc tài liệu, slide và làm bài tập của cô Châu cùng thầy bài tập Linh để trau dồi kiến thức lâp trình nâng cao.
-- Tham khảo về 1 chương trình SDL2 từ 1 series lập trình Game RPG với SDL2 của Youtuber: [Let's Make Games](https://www.youtube.com/channel/UCAM9ZPgEIdeHAsmG50wqL1g)
+- Tham khảo về 1 chương trình SDL2 từ 1 series lập trình Game RPG với SDL2 của Youtuber: [Let's Make Games](https://www.youtube.com/channel/UCAM9ZPgEIdeHAsmG50wqL1g)  
   [Link tới danh sách phát](https://www.youtube.com/watch?v=QQzAHcojEKg&list=PLhfAbcv9cehhkG7ZQK0nfIGJC_C-wSLrx)
-- Tham khảo khung chương trình và cách tổ chức game từ 1 video làm game Pacman của Youtuber: [HexagonNico](https://www.youtube.com/watch?v=4AatUPAXrj8)
+- Tham khảo khung chương trình và cách tổ chức game từ 1 video làm game Pacman của Youtuber: [HexagonNico](https://www.youtube.com/watch?v=4AatUPAXrj8)  
   [Link tới Video](https://www.youtube.com/watch?v=4AatUPAXrj8)
 - Một số tài liệu về OOP và Pointer trong C++ để hiểu rõ hơn.
 
