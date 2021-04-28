@@ -7,6 +7,7 @@ Bài tập lớn - Game (môn học: Lập trình Nâng cao - INT2215 6)
 
 ### Table of Contents
 **[Started](#started)**  
+**[References](#references)**  
 **[Overview](#overview)**  
 **[Ghost AI](#ghost-ai)**  
 
@@ -27,7 +28,7 @@ Yêu cầu cho bài tập lớn là:
 - Game có ai cho quái
 
 ### Prepared
-Để chuẩn bị cho bài tập lớn, mình cần chuẩn bị những kiến thức sau:
+Để chuẩn bị cho bài tập lớn, em cần chuẩn bị những kiến thức sau:
 - Kiến thức nền tảng: C++
 - Kiến thức về OOP của C++ (chủ yếu là class)
 - Kiến thức để sử dụng thư viện SDL2 (lazyfoo)
@@ -39,6 +40,15 @@ Yêu cầu cho bài tập lớn là:
   - Hình ảnh (texture -> png): Vẽ lại theo game gốc và thêm thắt sáng tạo
   - Âm thanh (wav): lấy từ game gốc
 - Thời gian để thu thập những thứ trên
+
+## References
+Để chuẩn bị cho bài tập lớn em đã:
+- Đoc tài liệu, slide và làm bài tập của cô Châu cùng thầy bài tập Linh để trau dồi kiến thức lâp trình nâng cao.
+- Tham khảo về 1 chương trình SDL2 từ 1 series lập trình Game RPG với SDL2 của Youtuber: [Let's Make Games](https://www.youtube.com/channel/UCAM9ZPgEIdeHAsmG50wqL1g)
+  [Link tới danh sách phát](https://www.youtube.com/watch?v=QQzAHcojEKg&list=PLhfAbcv9cehhkG7ZQK0nfIGJC_C-wSLrx)
+- Tham khảo khung chương trình và cách tổ chức game từ 1 video làm game Pacman của Youtuber: [HexagonNico](https://www.youtube.com/watch?v=4AatUPAXrj8)
+  [Link tới Video](https://www.youtube.com/watch?v=4AatUPAXrj8)
+- Một số tài liệu về OOP và Pointer trong C++ để hiểu rõ hơn.
 
 ## Overview
 
