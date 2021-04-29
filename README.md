@@ -65,11 +65,13 @@ Những tính năng mới được thêm vào trong game:
 -  Pacman giờ có thêm 2 nhân vật:
   -  Ms Pacman
   -  Android Pacman
+-  Đã thêm tính năng chọn nhân vật Pacman (trong setting)
+-  Đã thêm tính năng Fruit bonus điểm cho trò chơi
+-  Đã random các Big dot trên màn chơi
 
 Những tính năng đang trong kế hoạch thêm vào game:
 - 1 Ghost mới tên là Golden là boss chính (kết hợp bởi 4 ghost cũ) có khả năng thả dot nhỏ trên đường đi và khả năng teleport nếu bị bắt. Khi Golden bị bắt đủ 3 lần nó sẽ chuyển sang trạng thái sợ hãi (frightened) và bạn sẽ được phép tấn công Golden. Golden có tổng cộng 3 mạng. 
-- Random các Dot trên màn chơi
-- Thêm tính năng Fruit bonus điểm cho trò chơi
+- 1 Ghost mới tên là Deadly nguy hiểm, không bị ảnh hưởng bởi các Big dot và có khả năng tiêu diệt người chơi ngay lập tức!
 
 ## Control
 Người chơi sử dụng 4 phím trên bàn phím để di chuyển Pacman.  
