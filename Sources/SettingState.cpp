@@ -51,7 +51,7 @@ void SettingState::init(System* _system)
     setting_button[SETTING_BUTTON_VOLUME_MUSIC]->setState(system->musicVolume);
     setting_button[SETTING_BUTTON_VOLUME_SOUND]->setState(system->channelVolume);
     setting_button[SETTING_BUTTON_CONTROL]->setState(system->controlType);
-    setting_button[SETTING_BUTTON_GRAPHIC]->setState(system->zoomScale);
+    setting_button[SETTING_BUTTON_GRAPHIC]->setState(system->mainCharacter);
 
     curButton = 0;
     setting_button[curButton]->setClick(true);
@@ -155,7 +155,7 @@ void SettingState::updateState(int change)
             system->controlType = newState;
             break;
         case SETTING_BUTTON_GRAPHIC:
-            system->zoomScale = newState;
+            system->mainCharacter = newState;
             break;
         default:
             break;

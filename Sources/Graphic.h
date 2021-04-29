@@ -43,10 +43,6 @@ class Graphic
         void setViewPort(SDL_Rect viewport);
         void unsetViewPort();
 
-        //zoom scale:
-        void setZoomScale(int ZoomScale);
-        int getZoomScale();
-
         //set texture alpha blending:
         void setTextureBlending(const RESOURCES_TYPE resources_type, SDL_BlendMode blending = SDL_BLENDMODE_BLEND);
         void setTextureAlpha(const RESOURCES_TYPE resources_type, Uint8 alpha = 0xBD);
@@ -71,7 +67,6 @@ class Graphic
 
         ///System value
         int curAlpha[RESOURCES_TYPE_TOTAL];
-        int zoomScale;
 };
 
 #endif // GRAPHIC_H_

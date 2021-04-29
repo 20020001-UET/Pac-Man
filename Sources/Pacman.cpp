@@ -162,9 +162,6 @@ void Pacman::initState()
             if (pacman_type == PACMAN_MS)
                 type = OBJECT_PACMAN_MS;
 
-            if (pacman_type == PACMAN_RED)
-                type = OBJECT_PACMAN_RED;
-
             if (pacman_type == PACMAN_ANDROID)
                 type = OBJECT_PACMAN_ANDROID;
 
@@ -183,9 +180,6 @@ void Pacman::initState()
             type = OBJECT_PACMAN;
             if (pacman_type == PACMAN_MS)
                 type = OBJECT_PACMAN_MS;
-
-            if (pacman_type == PACMAN_RED)
-                type = OBJECT_PACMAN_RED;
 
             if (pacman_type == PACMAN_ANDROID)
                 type = OBJECT_PACMAN_ANDROID;
@@ -321,7 +315,7 @@ void Pacman::initPower(PACMAN_POWER_STATE curNewPower)
         }
         case POWER_PACMAN:
         {
-            type = OBJECT_PACMAN_RED;
+
             break;
         }
         case SPEED_PACMAN:

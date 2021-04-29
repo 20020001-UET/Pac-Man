@@ -69,6 +69,7 @@ bool handleFruitHit(Fruit* fruit, Pacman* pacman)
 
     if (fruit->checkCollision(pacman))
     {
+        pacman->setState(PACMAN_EATING_STATE);
         return true;
     }
 

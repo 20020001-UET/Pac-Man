@@ -17,8 +17,8 @@ PlayingState::PlayingState() : State()
 
     labyrinth = new Labyrinth;
 
-    pacman = new Pacman();
-    //pacman = new Pacman(PACMAN_MS);
+    //pacman. . .
+    pacman = NULL;
 
     blinky = new Blinky;
 
@@ -76,13 +76,16 @@ PlayingState::~PlayingState()
 void PlayingState::init(System* _system)
 {
     system = _system;
+    system->loadHighscore();
 
     background->init(system->graphic);
 
     labyrinth->init(system->graphic);
     labyrinth->load();
 
+    pacman = new Pacman(PACMAN_TYPE_AT[system->mainCharacter]);
     pacman->init(system->graphic, system->timer, labyrinth->getPacmanStand());
+
     blinky->init(system->graphic, system->timer, labyrinth->getGhostStart(), labyrinth->getBlinkyStand(), Point(27, -1));
     pinky->init(system->graphic, system->timer, labyrinth->getGhostStart(), labyrinth->getPinkyStand(), Point(0, -1));
     inky->init(system->graphic, system->timer, labyrinth->getGhostStart(), labyrinth->getInkyStand(), Point(27, 32));
@@ -90,7 +93,7 @@ void PlayingState::init(System* _system)
 
     fruit->init(system->graphic, system->timer, Point(28, 14), Point(14, 17));
 
-    gameStatus->init(pacman, system->graphic, system->timer, HIGHSCORE_POINT, SCORE_POINT, LIFE_POINT, LEVEL_POINT);
+    gameStatus->init(pacman, system->graphic, system->timer, system->highscore, HIGHSCORE_POINT, SCORE_POINT, LIFE_POINT, LEVEL_POINT);
 
     getControl();
 
@@ -179,6 +182,7 @@ void PlayingState::keyReleased(const int key_code)
         {
             system->timer->pause();
             system->audio->pause();
+            system->saveHighscore(gameStatus->getScore());
             pull(RESUME_STATE);
             break;
         }
@@ -211,8 +215,6 @@ void PlayingState::initState()
         {
             system->audio->play(MUSIC_TYPE::GAME_START);
             //Init object. . .
-            gameStatus->load();
-
             labyrinth->setAnimated(true);
             gameStatus->setAnimated(true);
 
@@ -321,16 +323,28 @@ void PlayingState::handleState()
                 pacman->loop();
 
                 if (blinky->getBehavior() == GHOST_EATEN || blinky->getBehavior() == GHOST_REBORN)
-                    blinky->loop();
+                {
+                    handleGhostTarget(blinky, pacman, blinky);
+                    handleGhostMove(blinky, labyrinth);
+                }
 
                 if (pinky->getBehavior() == GHOST_EATEN || pinky->getBehavior() == GHOST_REBORN)
-                    pinky->loop();
+                {
+                    handleGhostTarget(pinky, pacman, blinky);
+                    handleGhostMove(pinky, labyrinth);
+                }
 
                 if (inky->getBehavior() == GHOST_EATEN || inky->getBehavior() == GHOST_REBORN)
-                    inky->loop();
+                {
+                    handleGhostTarget(inky, pacman, blinky);
+                    handleGhostMove(inky, labyrinth);
+                }
 
                 if (clyde->getBehavior() == GHOST_EATEN || clyde->getBehavior() == GHOST_REBORN)
-                    clyde->loop();
+                {
+                    handleGhostTarget(clyde, pacman, blinky);
+                    handleGhostMove(clyde, labyrinth);
+                }
 
                 break;
             }
@@ -341,9 +355,11 @@ void PlayingState::handleState()
                 pacman->stop();
 
             if (labyrinth->isDotHere(pacman->getTile()))
+            //if (labyrinth->isDotHere(pacman->getScreen(), pacman->getCurDirection()))
             {
                 cur_dot_count++;
                 int power = labyrinth->isPowerDotHere(pacman->getTile());
+                //int power = labyrinth->isPowerDotHere(pacman->getScreen(), pacman->getCurDirection());
                 if (power == -1)
                 {
                     system->audio->play(EFFECT_TYPE::MUNCH, false, 1);
@@ -391,6 +407,7 @@ void PlayingState::handleState()
                 }
                 pacman->eatDot();
                 labyrinth->removeDot(pacman->getTile());
+                //labyrinth->removeDot(pacman->getScreen(), pacman->getCurDirection());
             }
 
             if (labyrinth->isIntersection(pacman->getTile()))
@@ -406,12 +423,16 @@ void PlayingState::handleState()
             handleGhostMove(inky, labyrinth);
             handleGhostMove(clyde, labyrinth);
 
+            bool isEndGame = false;
+
             switch (handleGhostHit(blinky, pacman))
             {
                 case PACMAN_HIT_GHOST:
                     setState(END_GAME);
+                    isEndGame = true;
                     break;
                 case GHOST_HIT_PACMAN:
+                    system->audio->play(EFFECT_TYPE::EAT_GHOST, false, 1);
                     gameStatus->pushScore(UPDATE_SCORE_EAT_GHOST, blinky->getScreen());
                     break;
                 default:
@@ -422,8 +443,10 @@ void PlayingState::handleState()
             {
                 case PACMAN_HIT_GHOST:
                     setState(END_GAME);
+                    isEndGame = true;
                     break;
                 case GHOST_HIT_PACMAN:
+                    system->audio->play(EFFECT_TYPE::EAT_GHOST, false, 1);
                     gameStatus->pushScore(UPDATE_SCORE_EAT_GHOST, pinky->getScreen());
                     break;
                 default:
@@ -434,8 +457,10 @@ void PlayingState::handleState()
             {
                 case PACMAN_HIT_GHOST:
                     setState(END_GAME);
+                    isEndGame = true;
                     break;
                 case GHOST_HIT_PACMAN:
+                    system->audio->play(EFFECT_TYPE::EAT_GHOST, false, 1);
                     gameStatus->pushScore(UPDATE_SCORE_EAT_GHOST, inky->getScreen());
                     break;
                 default:
@@ -446,18 +471,24 @@ void PlayingState::handleState()
             {
                 case PACMAN_HIT_GHOST:
                     setState(END_GAME);
+                    isEndGame = true;
                     break;
                 case GHOST_HIT_PACMAN:
+                    system->audio->play(EFFECT_TYPE::EAT_GHOST, false, 1);
                     gameStatus->pushScore(UPDATE_SCORE_EAT_GHOST, clyde->getScreen());
                     break;
                 default:
                     break;
             }
 
+            if (isEndGame)
+                break;
+
             handleFruitMove(fruit, labyrinth);
 
             if (handleFruitHit(fruit, pacman))
             {
+                system->audio->play(EFFECT_TYPE::EAT_FRUIT, false, 1);
                 gameStatus->pushScore(UPDATE_SCORE_EAT_FRUIT, fruit->getScreen());
                 fruit->setState(FRUIT_STAND);
             }

@@ -97,7 +97,7 @@ void Graphic::draw(const SETTING_BUTTON_TYPE setting_button_type, const bool cli
 void Graphic::draw(const OBJECT_TYPE object_type, const int sprite_val, const SDL_Rect object_dest)
 {
     RESOURCES_TYPE resources_type = OBJECT;
-    if (object_type == OBJECT_PACMAN || object_type == OBJECT_PACMAN_MS || object_type == OBJECT_PACMAN_RED || object_type == OBJECT_PACMAN_ANDROID)
+    if (object_type == OBJECT_PACMAN || object_type == OBJECT_PACMAN_MS || object_type == OBJECT_PACMAN_ANDROID)
         resources_type = PACMAN;
 
     SDL_Texture* tmpTexture = resources->getTexture(resources_type);
@@ -161,18 +161,6 @@ void Graphic::unsetViewPort()
         console->logError("Can't unset viewport ", ERROR_FLAGS::SDL_ERROR);
     }
     return;
-}
-
-//zoom scale:
-void Graphic::setZoomScale(int ZoomScale)
-{
-    zoomScale = ZoomScale;
-    return;
-}
-
-int Graphic::getZoomScale()
-{
-    return zoomScale;
 }
 
 //set texture alpha blending:

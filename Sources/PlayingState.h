@@ -45,6 +45,9 @@ const Point HIGHSCORE_POINT = Point(80*3, 12*3);
 const Point LIFE_POINT = Point(0*3, 276*3);
 const Point LEVEL_POINT = Point(128*3, 276*3);
 
+///Pacman type
+const PACMAN_TYPE PACMAN_TYPE_AT[PACMAN_TYPE_TOTAL] = {PACMAN_DEFAULT, PACMAN_MS, PACMAN_ANDROID};
+
 ///PlayingState
 class PlayingState:
     public State

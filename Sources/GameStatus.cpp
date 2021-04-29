@@ -32,7 +32,7 @@ GameStatus::~GameStatus()
 }
 
 ///main function:
-void GameStatus::init(Pacman* _pacman, Graphic* _graphic, Timer* _timer, Point _highscore_point, Point _score_point, Point _life_point, Point _level_point)
+void GameStatus::init(Pacman* _pacman, Graphic* _graphic, Timer* _timer, Uint32 _highscore, Point _highscore_point, Point _score_point, Point _life_point, Point _level_point)
 {
     pacman = _pacman;
     graphic = _graphic;
@@ -51,81 +51,11 @@ void GameStatus::init(Pacman* _pacman, Graphic* _graphic, Timer* _timer, Point _
     frame = 0;
     frame_value = GAMESTATUS_FRAME_VALUE;
 
+    highscore = _highscore;
+
     curGhostEaten = 0;
 
     console->writeLine("Initialized done!");
-
-    return;
-}
-
-///load highscore
-void GameStatus::load(std::string path)
-{
-    std::ifstream highscore_file(path);
-
-    if (highscore_file.good())
-    {
-        int total;
-        highscore_file >> total;
-        while (total--)
-        {
-            Uint32 tmp;
-            highscore_file >> tmp;
-            highscore_set.insert(tmp);
-        }
-        if (!highscore_set.empty())
-            highscore = (*highscore_set.begin());
-        console->writeLine("Loading highscore done!");
-    }
-    else
-    {
-        highscore = 0;
-        console->writeLine("Could not read highscore file!");
-    }
-
-    highscore_file.close();
-    return;
-}
-
-///save highscore
-void GameStatus::save(std::string path)
-{
-    std::ofstream highscore_file(path);
-
-    if (highscore_file.good())
-    {
-        highscore_set.insert(score);
-
-        if (highscore_set.size() >= 10)
-        {
-            highscore_file << "10\n";
-        }
-        else
-        {
-            highscore_file << highscore_set.size() << '\n';
-        }
-
-        int cnt = 0;
-        std::multiset<Uint32, std::greater<Uint32>>::iterator it;
-        for (it = highscore_set.begin(); it != highscore_set.end(); ++it)
-        {
-            Uint32 tmp = (*it);
-
-            cnt++;
-            if (cnt <= 10)
-            {
-                highscore_file << tmp << '\n';
-            }
-            else
-                break;
-        }
-        console->writeLine("Saving highscore done!");
-    }
-    else
-    {
-        highscore = 0;
-        console->writeLine("Could not write highscore file!");
-    }
 
     return;
 }
@@ -301,6 +231,11 @@ void GameStatus::renderScore()
     return;
 }
 
+
+Uint32 GameStatus::getScore()
+{
+    return score;
+}
 ///update animation
 void GameStatus::setAnimated(bool _animated)
 {

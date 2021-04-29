@@ -7,6 +7,7 @@
 #include "Console.h"
 #include "Point.h"
 #include "Direction.h"
+#include "Pacman.h"
 #include <string>
 
 ///Labyrinth type
@@ -65,8 +66,11 @@ class Labyrinth
         Point getPacmanStand() const;
         bool pacmanCanMove(Point tile, DIRECTION dir) const;
         bool isDotHere(Point tile) const;
+        bool isDotHere(Point screen, DIRECTION dir) const;
         int isPowerDotHere(Point tile) const;
+        int isPowerDotHere(Point screen, DIRECTION dir) const;
         void removeDot(Point tile);
+        void removeDot(Point screen, DIRECTION dir);
 
         ///Ghost function:
         Point getGhostStart() const;

@@ -8,7 +8,6 @@
 #include "Timer.h"
 #include "System.h"
 #include "Ghost.h"
-#include <set>
 #include <vector>
 
 const NUMBER_TYPE NUMBER_TYPE_AT[NUMBER_TYPE_TOTAL] = { NUMBER_BLUE, NUMBER_DEFAULT };
@@ -53,13 +52,7 @@ class GameStatus
         ~GameStatus();
 
         ///main function:
-        void init(Pacman* _pacman, Graphic* _graphic, Timer* _timer, Point _highscore_point, Point _score_point, Point _life_point, Point _level_point);
-
-        //load highscore
-        void load(std::string path = SYSTEM_HIGHSCORE_PATH);
-
-        //save highscore
-        void save(std::string path = SYSTEM_HIGHSCORE_PATH);
+        void init(Pacman* _pacman, Graphic* _graphic, Timer* _timer, Uint32 _highscore, Point _highscore_point, Point _score_point, Point _life_point, Point _level_point);
 
         ///push score
         void updateScore();
@@ -71,6 +64,8 @@ class GameStatus
 
         void render();
         void renderScore();
+
+        Uint32 getScore();
 
         ///update animation
         void setAnimated(bool _animated = true);
@@ -91,7 +86,6 @@ class GameStatus
         Timer* timer;
 
         ///Highscore
-        std::multiset<Uint32, std::greater<Uint32>> highscore_set;
         Uint32 score, bonus, highscore;
         int score_state;
         int pacman_life;

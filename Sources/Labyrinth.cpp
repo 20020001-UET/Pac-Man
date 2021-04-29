@@ -223,6 +223,14 @@ bool Labyrinth::isDotHere(Point tile) const
     return false;
 }
 
+bool Labyrinth::isDotHere(Point screen, DIRECTION dir) const
+{
+    Point newTile = (screen + DIRECTION_VALUE[dir]*PACMAN_SPEED) / RESOURCES_PIXEL;
+    if (checkIn(newTile))
+        return isDot[newTile.x][newTile.y];
+    return false;
+}
+
 int Labyrinth::isPowerDotHere(Point tile) const
 {
     if (checkIn(tile))
@@ -253,10 +261,50 @@ int Labyrinth::isPowerDotHere(Point tile) const
     return -1;
 }
 
+int Labyrinth::isPowerDotHere(Point screen, DIRECTION dir) const
+{
+    Point newTile = (screen + DIRECTION_VALUE[dir]*PACMAN_SPEED/2) / RESOURCES_PIXEL;
+    if (checkIn(newTile))
+        if (isDot[newTile.x][newTile.y])
+            if (data[newTile.x][newTile.y] == POWER_DOT_DATA)
+            {
+                switch (powerDot[newTile.x][newTile.y])
+                {
+                    case DEFAULT_DOT:
+                        return DEFAULT_DOT;
+                        break;
+                    case POWER_DOT:
+                        return POWER_DOT;
+                        break;
+                    case SPEED_DOT:
+                        return SPEED_DOT;
+                        break;
+                    case INVISIBLE_DOT:
+                        return INVISIBLE_DOT;
+                        break;
+                    case TIME_FREE_DOT:
+                        return TIME_FREE_DOT;
+                        break;
+                    default:
+                        break;
+                }
+            }
+    return -1;
+}
+
 void Labyrinth::removeDot(Point tile)
 {
     isDot[tile.x][tile.y] = false;
     dotRemain--;
+    return;
+}
+
+void Labyrinth::removeDot(Point screen, DIRECTION dir)
+{
+    Point newTile = (screen + DIRECTION_VALUE[dir]*PACMAN_SPEED/2) / RESOURCES_PIXEL;
+    if (isDot[newTile.x][newTile.y])
+        dotRemain--;
+    isDot[newTile.x][newTile.y] = false;
     return;
 }
 

@@ -9,6 +9,7 @@
 #include "Graphic.h"
 #include "Timer.h"
 #include "Control.h"
+#include <set>
 
 ///System config
 const std::string SYSTEM_CONFIG_PATH = "system.config";
@@ -36,10 +37,12 @@ struct System
     void initControl();
     //load:
     void load(std::string path = SYSTEM_CONFIG_PATH);
+    void loadHighscore(std::string path = SYSTEM_HIGHSCORE_PATH);
     //update system:
     void update();
     //save:
     void save(std::string path = SYSTEM_CONFIG_PATH);
+    void saveHighscore(Uint32 score, std::string path = SYSTEM_HIGHSCORE_PATH);
     //close:
     void close();
 
@@ -53,8 +56,10 @@ struct System
     Control* control;
 
     ///System value
+    std::multiset<Uint32, std::greater<Uint32>> highscore_set;
+    Uint32 highscore;
     int musicVolume, channelVolume;
-    int zoomScale;
+    int mainCharacter;
     int controlType;
 
 };

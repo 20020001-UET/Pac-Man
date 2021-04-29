@@ -149,23 +149,6 @@ void Resources::create()
     for (int index = 0; index < PACMAN_SPRITE_TOTAL; index++)
     {
         if (index % 4 == 3)
-            pacman_red_sprite[index] = pacman_red_sprite[index-2];
-        else
-            if (index % 4 == 0 && index > 0)
-                pacman_red_sprite[index] = pacman_red_sprite[0];
-            else
-            {
-                pacman_red_sprite[index] = {cnt*OBJECT_PIXEL, height_sprite*OBJECT_PIXEL, OBJECT_PIXEL, OBJECT_PIXEL};
-                cnt++;
-            }
-    }
-    console->writeLine("Created pacman red sprites");
-
-    cnt = 0;
-    height_sprite++;
-    for (int index = 0; index < PACMAN_SPRITE_TOTAL; index++)
-    {
-        if (index % 4 == 3)
             pacman_android_sprite[index] = pacman_android_sprite[index-2];
         else
         {
@@ -391,9 +374,6 @@ SDL_Rect Resources::getSprite(const OBJECT_TYPE object_type, const int sprite_va
             break;
         case OBJECT_PACMAN_MS:
             tmpRect = pacman_ms_sprite[sprite_val];
-            break;
-        case OBJECT_PACMAN_RED:
-            tmpRect = pacman_red_sprite[sprite_val];
             break;
         case OBJECT_PACMAN_ANDROID:
             tmpRect = pacman_android_sprite[sprite_val];
