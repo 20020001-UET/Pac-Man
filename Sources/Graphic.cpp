@@ -133,6 +133,21 @@ void Graphic::renderNumber(const NUMBER_TYPE number_type, const int number, cons
     return;
 }
 
+void Graphic::renderNumber(const NUMBER_TYPE number_type, const std::string number, const Point dest_point)
+{
+    Point dest;
+
+    dest = dest_point;
+    for (size_t index = 0; index < number.size(); index++)
+    {
+        int num = (int)(number[index] - '0');
+        renderNumber(number_type, num, dest);
+        dest.x += RESOURCES_PIXEL;
+    }
+
+    return;
+}
+
 void Graphic::renderScore(const int sprite_val, const Point score_dest)
 {
     SDL_Rect dest = {score_dest.x, score_dest.y, SCORE_WIDTH, SCORE_HEIGHT};

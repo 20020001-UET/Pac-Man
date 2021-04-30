@@ -36,6 +36,7 @@ class Graphic
 
         //render text:
         void renderNumber(const NUMBER_TYPE number_type, const int number, const Point dest_point);
+        void renderNumber(const NUMBER_TYPE number_type, const std::string number, const Point dest_point);
         void renderText(const std::string& text, const Point dest_point);
         void renderScore(const int sprite_val, const Point score_point);
 

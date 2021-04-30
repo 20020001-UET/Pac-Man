@@ -478,7 +478,7 @@ void Pacman::stop(bool canPacmanMove)
 
 bool Pacman::isDead()
 {
-    return (life > 0);
+    return (life <= 0);
 }
 
 void Pacman::dead()

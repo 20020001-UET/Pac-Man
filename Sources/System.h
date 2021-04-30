@@ -42,7 +42,7 @@ struct System
     void update();
     //save:
     void save(std::string path = SYSTEM_CONFIG_PATH);
-    void saveHighscore(Uint32 score, std::string path = SYSTEM_HIGHSCORE_PATH);
+    void saveHighscore(Uint32 score, int level, std::string path = SYSTEM_HIGHSCORE_PATH);
     //close:
     void close();
 
@@ -57,7 +57,8 @@ struct System
 
     ///System value
     std::multiset<Uint32, std::greater<Uint32>> highscore_set;
-    Uint32 highscore;
+    int lastLevel;
+    Uint32 lastScore, highscore;
     int musicVolume, channelVolume;
     int mainCharacter;
     int controlType;

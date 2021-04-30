@@ -182,7 +182,6 @@ void PlayingState::keyReleased(const int key_code)
         {
             system->timer->pause();
             system->audio->pause();
-            system->saveHighscore(gameStatus->getScore());
             pull(RESUME_STATE);
             break;
         }
@@ -531,7 +530,15 @@ void PlayingState::handleState()
         {
             if (!system->audio->isPlayingChannel())
             {
-                setState(NEW_LIFE_GAME);
+                if (!pacman->isDead())
+                {
+                    setState(NEW_LIFE_GAME);
+                }
+                else
+                {
+                    system->saveHighscore(gameStatus->getScore(), gameStatus->getLevel());
+                    pull(GAME_OVER_STATE);
+                }
             }
 
             break;

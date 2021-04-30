@@ -7,6 +7,20 @@
 #include "State.h"
 #include "Console.h"
 #include "Background.h"
+#include <vector>
+
+///Constance value
+const int HIGHSCORE_TOTAL = 10;
+const Point HIGHSCORE_TABLE_POINT[HIGHSCORE_TOTAL] = {Point(112*3, 80*3),
+                                                Point(112*3, 100*3),
+                                                Point(112*3, 120*3),
+                                                Point(112*3, 140*3),
+                                                Point(112*3, 160*3),
+                                                Point(112*3, 180*3),
+                                                Point(112*3, 200*3),
+                                                Point(112*3, 220*3),
+                                                Point(112*3, 240*3),
+                                                Point(112*3, 260*3)};
 
 ///HighScoreState
 class HighScoreState:
@@ -42,6 +56,9 @@ class HighScoreState:
 
         ///Background
         Background* background;
+
+        //Vector
+        std::vector<Uint32> score;
 };
 
 #endif // HIGHSCORE_STATE_H_

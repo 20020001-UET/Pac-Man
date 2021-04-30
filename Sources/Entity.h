@@ -10,7 +10,7 @@
 #include "Point.h"
 
 ///Collision value
-const int COLLISION_VALUE = 5*3;
+const int COLLISION_VALUE = 7*3;
 
 ///Entity class
 class Entity

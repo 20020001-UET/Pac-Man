@@ -41,7 +41,7 @@ void System::init()
     timer = new Timer;
     control = new Control;
 
-    highscore = 0;
+    lastScore = highscore = 0;
     highscore_set.clear();
 
     console->writeLine("Initialize system. . .");
@@ -153,9 +153,12 @@ void System::save(std::string path)
     return;
 }
 
-void System::saveHighscore(Uint32 score, std::string path)
+void System::saveHighscore(Uint32 score, int level, std::string path)
 {
     std::ofstream highscore_file(path);
+
+    lastScore = score;
+    lastLevel = level;
 
     if (highscore_file.good())
     {

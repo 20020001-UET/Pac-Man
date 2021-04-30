@@ -2,6 +2,7 @@
 #include "HighScoreState.h"
 
 ///Include header
+#include <sstream>
 
 ///HighScoreState class
 //Constructor:
@@ -10,6 +11,8 @@ HighScoreState::HighScoreState() : State()
     console = new Console("Highscore");
 
     background = new Background(BACKGROUND_HIGHSCORE);
+
+    score.clear();
 
     return;
 }
@@ -23,6 +26,8 @@ HighScoreState::~HighScoreState()
     delete console;
     console = NULL;
 
+    score.clear();
+
     return;
 }
 
@@ -33,6 +38,18 @@ void HighScoreState::init(System* _system)
     system = _system;
 
     background->init(system->graphic);
+
+    score.resize(10, 0);
+
+    if (system->highscore_set.empty())
+        system->loadHighscore();
+
+    int cnt = 0;
+    std::multiset<Uint32, std::greater<Uint32>>::iterator it;
+    for (it = system->highscore_set.begin(); it != system->highscore_set.end(); ++it)
+    {
+        score[cnt++] = (*it);
+    }
 
     console->writeLine("Initialized HighScoreState");
     return;
@@ -48,6 +65,20 @@ void HighScoreState::loop()
 void HighScoreState::render()
 {
     background->render();
+
+    //render highscore table
+    std::stringstream ss;
+    std::string num;
+    for (size_t index = 0; index < score.size(); index++)
+    {
+        ss.clear();
+        ss << score[index];
+        ss >> num;
+        while (num.size() < 8)
+            num = '0' + num;
+
+        system->graphic->renderNumber(NUMBER_DEFAULT, num, HIGHSCORE_TABLE_POINT[index]);
+    }
 
     return;
 }

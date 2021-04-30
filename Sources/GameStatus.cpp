@@ -151,7 +151,6 @@ void GameStatus::render()
 
     std::stringstream ss;
     std::string num;
-    Point dest;
 
     //render score
     ss << score;
@@ -159,13 +158,7 @@ void GameStatus::render()
     while (num.size() < 8)
         num = '0' + num;
 
-    dest = score_point;
-    for (size_t index = 0; index < num.size(); index++)
-    {
-        int number = (int)(num[index] - '0');
-        graphic->renderNumber(number_type, number, dest);
-        dest.x += RESOURCES_PIXEL;
-    }
+    graphic->renderNumber(number_type, num, score_point);
 
     //render highscore
     ss.clear();
@@ -174,16 +167,10 @@ void GameStatus::render()
     while (num.size() < 8)
         num = '0' + num;
 
-    dest = highscore_point;
-    for (size_t index = 0; index < num.size(); index++)
-    {
-        int number = (int)(num[index] - '0');
-        if (highscore > score)
-            graphic->renderNumber(NUMBER_DEFAULT, number, dest);
-        else
-            graphic->renderNumber(number_type, number, dest);
-        dest.x += RESOURCES_PIXEL;
-    }
+    if (highscore > score)
+        graphic->renderNumber(NUMBER_DEFAULT, num, highscore_point);
+    else
+        graphic->renderNumber(number_type, num, highscore_point);
 
     //render life
     SDL_Rect destination = {life_point.x, life_point.y, OBJECT_PIXEL, OBJECT_PIXEL};
