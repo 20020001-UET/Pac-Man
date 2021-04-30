@@ -224,11 +224,20 @@ void Resources::create()
 
     //Line 5
     height_sprite++;
+    cnt = 0;
     for (int index = 0; index < DOT_SPRITE_TOTAL; index++)
     {
-        dot[index] = {index*OBJECT_PIXEL, height_sprite*OBJECT_PIXEL, OBJECT_PIXEL, OBJECT_PIXEL};
+        dot[index] = {cnt*OBJECT_PIXEL, height_sprite*OBJECT_PIXEL, OBJECT_PIXEL, OBJECT_PIXEL};
+        cnt++;
     }
     console->writeLine("Created dot sprites");
+
+    for (int index = 0; index < DOT_STATUS_TOTAL; index++)
+    {
+        dot_status[index] = {cnt*OBJECT_PIXEL, height_sprite*OBJECT_PIXEL, OBJECT_PIXEL, OBJECT_PIXEL};
+        cnt++;
+    }
+    console->writeLine("Created dot status sprites");
 
     //Line 6
     height_sprite++;
@@ -401,6 +410,9 @@ SDL_Rect Resources::getSprite(const OBJECT_TYPE object_type, const int sprite_va
             break;
         case OBJECT_DOT:
             tmpRect = dot[sprite_val];
+            break;
+        case OBJECT_DOT_STATUS:
+            tmpRect = dot_status[sprite_val];
             break;
         case OBJECT_LEVEL:
             tmpRect = level[sprite_val];

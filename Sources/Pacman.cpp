@@ -39,8 +39,6 @@ void Pacman::init(Graphic* _graphic, Timer* _timer, Point _stand)
 
     stand = _stand;
 
-    graphic->setTextureBlending(PACMAN, SDL_BLENDMODE_BLEND);
-
     return;
 }
 
@@ -48,7 +46,6 @@ void Pacman::init(Graphic* _graphic, Timer* _timer, Point _stand)
 void Pacman::loop()
 {
     handleState();
-    handlePower();
 
     handleTunnel();
 
@@ -409,6 +406,7 @@ void Pacman::removePower(int curLastPower)
         }
         case SPEED_PACMAN:
         {
+            lastPoint.clear();
             if (speed != PACMAN_SPEED)
                 if (checkScreen())
                     speed = PACMAN_SPEED;
@@ -426,6 +424,11 @@ void Pacman::removePower(int curLastPower)
         }
     }
     return;
+}
+
+bool Pacman::isPacmanPower(const int checkPower)
+{
+    return power[checkPower];
 }
 
 //playing function:

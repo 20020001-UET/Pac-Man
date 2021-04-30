@@ -32,7 +32,7 @@ GameStatus::~GameStatus()
 }
 
 ///main function:
-void GameStatus::init(Pacman* _pacman, Graphic* _graphic, Timer* _timer, Uint32 _highscore, Point _highscore_point, Point _score_point, Point _life_point, Point _level_point)
+void GameStatus::init(Pacman* _pacman, Graphic* _graphic, Timer* _timer, Uint32 _highscore, Point _highscore_point, Point _score_point, Point _life_point, Point _level_point, Point _power_point)
 {
     pacman = _pacman;
     graphic = _graphic;
@@ -42,6 +42,7 @@ void GameStatus::init(Pacman* _pacman, Graphic* _graphic, Timer* _timer, Uint32 
     score_point = _score_point;
     life_point = _life_point;
     level_point = _level_point;
+    power_point = _power_point;
 
     score = highscore = bonus = pacman_life = score_state = 0;
     level = 0;
@@ -54,6 +55,9 @@ void GameStatus::init(Pacman* _pacman, Graphic* _graphic, Timer* _timer, Uint32 
     highscore = _highscore;
 
     curGhostEaten = 0;
+
+    for (int index = 0; index < PACMAN_POWER_STATE_TOTAL; index++)
+        power[index] = false;
 
     console->writeLine("Initialized done!");
 
@@ -135,6 +139,9 @@ void GameStatus::update()
     highscore = std::max(highscore, score);
     pacman_life = pacman->getCurLife();
 
+    for (int index = 0; index < PACMAN_POWER_STATE_TOTAL; index++)
+        power[index] = pacman->isPacmanPower(index);
+
     return;
 }
 
@@ -200,6 +207,20 @@ void GameStatus::render()
             animated = false;
             startAnimated = 0;
         }
+    }
+
+    //render power status
+    destination = {power_point.x, power_point.y, DOT_STATUS_WIDTH, DOT_STATUS_HEIGHT};
+    for (int index = 1; index < PACMAN_POWER_STATE_TOTAL; index++)
+    {
+        graphic->setTextureAlpha(OBJECT, 0x55);
+        if (power[index])
+        {
+            graphic->setTextureAlpha(OBJECT, 0xFF);
+        }
+        graphic->draw(OBJECT_DOT_STATUS, index-1, destination);
+        graphic->setTextureAlpha(OBJECT, 0xFF);
+        destination.x += OBJECT_PIXEL;
     }
 
     return;

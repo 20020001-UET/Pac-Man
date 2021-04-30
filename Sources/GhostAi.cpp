@@ -12,7 +12,7 @@ void handleGhostTarget(Ghost* ghost, Pacman* pacman, Blinky* blinky)
     switch (ghost->getBehavior())
     {
         case GHOST_CHASE:
-        case GHOST_FREEING:
+        case GHOST_FREEZING:
         {
             handleChaseTarget(ghost, pacman, blinky);
             break;
@@ -165,7 +165,7 @@ HIT_VALUE handleGhostHit(Ghost* ghost, Pacman* pacman)
         //return UNHIT;
         }
 
-        if (ghost->getBehavior() != GHOST_EATEN && ghost->getBehavior() != GHOST_BEING_EATEN && ghost->getBehavior() != GHOST_UNSET)
+        if (!pacman->isPacmanPower(INVISIBLE_PACMAN) && ghost->getBehavior() != GHOST_EATEN && ghost->getBehavior() != GHOST_BEING_EATEN && ghost->getBehavior() != GHOST_UNSET)
         {
             return PACMAN_HIT_GHOST;
         }

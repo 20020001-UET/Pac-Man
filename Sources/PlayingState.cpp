@@ -93,7 +93,7 @@ void PlayingState::init(System* _system)
 
     fruit->init(system->graphic, system->timer, Point(28, 14), Point(14, 17));
 
-    gameStatus->init(pacman, system->graphic, system->timer, system->highscore, HIGHSCORE_POINT, SCORE_POINT, LIFE_POINT, LEVEL_POINT);
+    gameStatus->init(pacman, system->graphic, system->timer, system->highscore, HIGHSCORE_POINT, SCORE_POINT, LIFE_POINT, LEVEL_POINT, POWER_POINT);
 
     getControl();
 
@@ -317,6 +317,12 @@ void PlayingState::handleState()
         }
         case PLAYING_GAME:
         {
+            pacman->handlePower();
+            blinky->handleMode();
+            pinky->handleMode();
+            inky->handleMode();
+            clyde->handleMode();
+
             if (pacman->getState() == PACMAN_EATING_STATE)
             {
                 pacman->loop();
@@ -395,10 +401,10 @@ void PlayingState::handleState()
                         case TIME_FREE_DOT:
                         {
                             pacman->setPower(FREE_TIME_PACMAN);
-                            blinky->setBehavior(GHOST_FREEING);
-                            pinky->setBehavior(GHOST_FREEING);
-                            inky->setBehavior(GHOST_FREEING);
-                            clyde->setBehavior(GHOST_FREEING);
+                            blinky->setBehavior(GHOST_FREEZING);
+                            pinky->setBehavior(GHOST_FREEZING);
+                            inky->setBehavior(GHOST_FREEZING);
+                            clyde->setBehavior(GHOST_FREEZING);
                             break;
                         }
                     }

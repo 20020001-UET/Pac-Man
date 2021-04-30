@@ -26,6 +26,7 @@ enum RESOURCES_TYPE
     ALPHABET,
     SCORE,
     FRUIT,
+    UNIQUE_GHOST,
     RESOURCES_TYPE_TOTAL
 };
 
@@ -113,6 +114,7 @@ enum OBJECT_TYPE
     OBJECT_EATEN_GHOST,
     OBJECT_PACMAN_DEATH,
     OBJECT_DOT,
+    OBJECT_DOT_STATUS,
     OBJECT_LEVEL,
     OBJECT_BELL,
     OBJECT_KEY,
@@ -160,8 +162,18 @@ enum DOT_SPRITE
     SPEED_DOT,
     INVISIBLE_DOT,
     TIME_FREE_DOT,
-    ANIMATION_DOT,
-    DOT_SPRITE_TOTAL = 11
+    DOT_SPRITE_TOTAL
+};
+
+const int DOT_STATUS_WIDTH = 16*3;
+const int DOT_STATUS_HEIGHT = 16*3;
+enum DOT_STATUS
+{
+    POWER_DOT_STATUS = 0,
+    SPEED_DOT_STATUS,
+    INVISIBLE_DOT_STATUS,
+    TIME_FREE_DOT_STATUS,
+    DOT_STATUS_TOTAL
 };
 
 enum LEVEL_TYPE
@@ -238,6 +250,17 @@ enum FRUIT_TYPE
     FRUIT_TYPE_TOTAL
 };
 
+///Unique Ghost
+const int UNIQUE_GHOST_WIDTH = 16*3;
+const int UNIQUE_GHOST_HEIGHT = 16*3;
+const int UNIQUE_ANIMATION_FRAME = 2;
+enum UNIQUE_GHOST_TYPE
+{
+    UNIQUE_GHOST_DEADLY = 0,
+    UNIQUE_GHOST_GOLDEN,
+    UNIQUE_GHOST_TOTAL
+};
+
 ///Resources class
 class Resources
 {
@@ -308,6 +331,7 @@ class Resources
         SDL_Rect clyde[GHOST_SPRITE_TOTAL];
         SDL_Rect pacman_death[PACMAN_DEATH_SPRITE_TOTAL];
         SDL_Rect dot[DOT_SPRITE_TOTAL];
+        SDL_Rect dot_status[DOT_STATUS_TOTAL];
         SDL_Rect level[FRUIT_TYPE_TOTAL];
         SDL_Rect bell, key, pacman_life;
         SDL_Rect labyrinth_sprite[LABYRINTH_TYPE_TOTAL];

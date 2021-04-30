@@ -52,7 +52,7 @@ class GameStatus
         ~GameStatus();
 
         ///main function:
-        void init(Pacman* _pacman, Graphic* _graphic, Timer* _timer, Uint32 _highscore, Point _highscore_point, Point _score_point, Point _life_point, Point _level_point);
+        void init(Pacman* _pacman, Graphic* _graphic, Timer* _timer, Uint32 _highscore, Point _highscore_point, Point _score_point, Point _life_point, Point _level_point, Point _power_point);
 
         ///push score
         void updateScore();
@@ -91,11 +91,15 @@ class GameStatus
         int pacman_life;
         int level;
 
+        ///Pacman power
+        bool power[PACMAN_POWER_STATE_TOTAL];
+
         ///Point
         Point highscore_point;
         Point score_point;
         Point life_point;
         Point level_point;
+        Point power_point;
 
         ///Animation
         bool animated;

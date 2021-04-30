@@ -38,12 +38,23 @@ enum GHOST_BEHAVIOR
     GHOST_EATEN,
     GHOST_REBORN,
     GHOST_BLIND,
-    GHOST_FREEING,
+    GHOST_FREEZING,
     GHOST_LEAVE_GHOST_HOUSE,
     GHOST_ENTER_GHOST_HOUSE,
     GHOST_BEHAVIOR_TOTAL
 };
-const int GHOST_BEHAVIOR_TIME[GHOST_BEHAVIOR_TOTAL] = {0, 0, 20000, 7000, 8300, 960, -1, 240, 4000, 4000, -1, -1};
+const int GHOST_BEHAVIOR_TIME[GHOST_BEHAVIOR_TOTAL] = {0, 0, 20000, 7000, 8300, 960, -1, 240, 4000, 5600, -1, -1};
+
+///Ghost mode
+enum GHOST_MODE
+{
+    GHOST_NORMAL = 0,
+    GHOST_FRIGHTENED_MODE,
+    GHOST_BLIND_MODE,
+    GHOST_FREEZING_MODE,
+    GHOST_MODE_TOTAL
+};
+const int GHOST_MODE_TIME[GHOST_MODE_TOTAL] = {0, 8300, 4000, 5600};
 
 ///Ghost class
 class Ghost:
@@ -76,6 +87,15 @@ class Ghost:
 
         GHOST_BEHAVIOR getBehavior();
 
+        ///mode function:
+        //mode:
+        void setMode(const GHOST_MODE newMode);
+        void initMode(const GHOST_MODE mode);
+        void handleMode();
+        void removeMode(const int mode);
+
+        bool isGhostMode(const GHOST_MODE checkMode);
+
         //playing function:
         DIRECTION getCurDirection();
         void setDirection(const DIRECTION newDirection);
@@ -107,6 +127,10 @@ class Ghost:
         std::queue<GHOST_BEHAVIOR> curBehavior;
         std::queue<Uint32> startBehavior;
 
+        ///Mode
+        bool curMode[GHOST_MODE_TOTAL];
+        Uint32 startMode[GHOST_MODE_TOTAL];
+
         ///Playing value
         Point target;
         Point start_point, scatter, stand;
@@ -118,7 +142,7 @@ class Ghost:
 
         ///Animation value
         bool animated;
-        int sprite_val;
+        int sprite_val, stand_val;
         int frame, frame_value;
 };
 

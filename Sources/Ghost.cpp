@@ -83,8 +83,8 @@ void Ghost::handleRender()
         return;
 
     GHOST_BEHAVIOR cur_behavior = curBehavior.back();
-    if (curBehavior.front() == GHOST_FRIGHTENED)
-        cur_behavior = GHOST_FRIGHTENED;
+
+    OBJECT_TYPE cur_type = type;
 
     switch (cur_behavior)
     {
@@ -93,7 +93,7 @@ void Ghost::handleRender()
         case GHOST_CHASE:
         case GHOST_SCATTER:
         case GHOST_BLIND:
-        case GHOST_FREEING:
+        case GHOST_FREEZING:
         {
             switch (getCurDirection())
             {
@@ -122,31 +122,6 @@ void Ghost::handleRender()
             if (frame / frame_value >= GHOST_ANIMATION_FRAME)
                 frame = 0;
 
-            graphic->draw(type, sprite_val, dest);
-
-            break;
-        }
-        case GHOST_FRIGHTENED:
-        {
-            int tickLeft = GHOST_BEHAVIOR_TIME[curBehavior.back()] - (timer->getTicks() - startBehavior.back());
-            if (curBehavior.front() == GHOST_FRIGHTENED)
-                tickLeft = GHOST_BEHAVIOR_TIME[curBehavior.front()] - (timer->getTicks() - startBehavior.front());
-            sprite_val = FRIGHTENED_GHOST_DEFAULT;
-
-            if (tickLeft <= 3000)
-            {
-                if ((tickLeft/300 % 2) != 0)
-                    sprite_val = FRIGHTENED_GHOST_WHITE;
-            }
-
-            sprite_val += frame / frame_value;
-
-            ++frame;
-            if (frame / frame_value >= FRIGHTENED_GHOST_ANIMATION_FRAME)
-                frame = 0;
-
-            graphic->draw(OBJECT_FRIGHTENED_GHOST, sprite_val, dest);
-
             break;
         }
         case GHOST_REBORN:
@@ -170,13 +145,48 @@ void Ghost::handleRender()
                     break;
             }
 
-            graphic->draw(OBJECT_EATEN_GHOST, sprite_val, dest);
+            cur_type = OBJECT_EATEN_GHOST;
 
             break;
         }
         default:
             break;
     }
+
+    if (curMode[GHOST_FRIGHTENED_MODE])
+    {
+        int tickLeft = GHOST_MODE_TIME[GHOST_FRIGHTENED_MODE] - (timer->getTicks() - startMode[GHOST_FRIGHTENED_MODE]);
+        sprite_val = FRIGHTENED_GHOST_DEFAULT;
+
+        if (tickLeft <= 2000)
+        {
+            if ((tickLeft/200 % 2) != 0)
+                sprite_val = FRIGHTENED_GHOST_WHITE;
+        }
+
+        sprite_val += frame / frame_value;
+
+        ++frame;
+        if (frame / frame_value >= FRIGHTENED_GHOST_ANIMATION_FRAME)
+            frame = 0;
+
+        cur_type = OBJECT_FRIGHTENED_GHOST;
+    }
+
+    if (curMode[GHOST_FREEZING_MODE])
+    {
+        int tickLeft = GHOST_MODE_TIME[GHOST_FREEZING_MODE] - (timer->getTicks() - startMode[GHOST_FREEZING_MODE]);
+        graphic->setTextureAlpha(OBJECT, 0x7F);
+
+        if (tickLeft <= 2000)
+        {
+            if ((tickLeft/200 % 2) != 0)
+                graphic->setTextureAlpha(OBJECT, 0xFF);
+        }
+    }
+
+    graphic->draw(cur_type, sprite_val, dest);
+    graphic->setTextureAlpha(OBJECT, 0xFF);
 
     return;
 }
@@ -228,7 +238,10 @@ void Ghost::setBehavior(const GHOST_BEHAVIOR newBehavior)
         case GHOST_REBORN:
             break;
         case GHOST_FRIGHTENED:
+        {
+            setMode(GHOST_FRIGHTENED_MODE);
             break;
+        }
         case GHOST_BEING_EATEN:
         {
             while (!curBehavior.empty())
@@ -236,9 +249,11 @@ void Ghost::setBehavior(const GHOST_BEHAVIOR newBehavior)
                 curBehavior.pop();
                 startBehavior.pop();
             }
+
+            setMode(GHOST_NORMAL);
             break;
         }
-        case GHOST_FREEING:
+        case GHOST_FREEZING:
         {
             if (!curBehavior.empty())
             {
@@ -255,10 +270,15 @@ void Ghost::setBehavior(const GHOST_BEHAVIOR newBehavior)
                 curBehavior.pop();
                 startBehavior.pop();
             }
+
+            setMode(GHOST_FREEZING_MODE);
             break;
         }
         case GHOST_BLIND:
+        {
+            setMode(GHOST_BLIND_MODE);
             break;
+        }
         default:
             break;
     }
@@ -310,6 +330,8 @@ void Ghost::initBehavior()
 
             outGhostHouse = false;
 
+            setMode(GHOST_NORMAL);
+
             removeBehavior();
 
             break;
@@ -347,6 +369,7 @@ void Ghost::initBehavior()
             speed = GHOST_SPEED;
             frame = 0;
             frame_value = GHOST_FRAME_VALUE;
+            break;
         }
         case GHOST_BLIND:
         {
@@ -383,9 +406,9 @@ void Ghost::initBehavior()
             frame_value = GHOST_FRAME_VALUE/2;
             break;
         }
-        case GHOST_FREEING:
+        case GHOST_FREEZING:
         {
-            animated = false;
+            animated = true;
             speed = 0;
             frame = 0;
             frame_value = GHOST_FRAME_VALUE;
@@ -401,7 +424,7 @@ void Ghost::handleBehavior()
 {
     if (!curBehavior.empty())
     {
-        if (curBehavior.back() == GHOST_FREEING || curBehavior.back() == GHOST_REBORN)
+        if (curBehavior.back() == GHOST_FREEZING || curBehavior.back() == GHOST_REBORN)
         {
             removeBehavior();
             return;
@@ -443,7 +466,7 @@ void Ghost::removeBehavior()
 
     if (curBehavior.size() == 2)
     {
-        if (curBehavior.front() == GHOST_FRIGHTENED && curBehavior.back() == GHOST_FREEING)
+        if (curBehavior.front() == GHOST_FRIGHTENED && curBehavior.back() == GHOST_FREEZING)
         {
             int tickLeft = timer->getTicks() - startBehavior.front();
             if (tickLeft >= GHOST_BEHAVIOR_TIME[curBehavior.front()])
@@ -454,7 +477,7 @@ void Ghost::removeBehavior()
         }
     }
 
-    if (!checkScreen() && curBehavior.front() != GHOST_BEING_EATEN && curBehavior.front() != GHOST_FREEING && curBehavior.front() != GHOST_INIT)
+    if (!checkScreen() && curBehavior.front() != GHOST_BEING_EATEN && curBehavior.front() != GHOST_FREEZING && curBehavior.front() != GHOST_INIT)
         return;
 
     if (curBehavior.back() == GHOST_FRIGHTENED && curBehavior.size() > 1)
@@ -530,7 +553,7 @@ void Ghost::removeBehavior()
             case GHOST_FRIGHTENED:
             {
                 if (!curBehavior.empty())
-                    if (curBehavior.front() == GHOST_FREEING)
+                    if (curBehavior.front() == GHOST_FREEZING)
                         break;
                 setBehavior(GHOST_CHASE);
                 break;
@@ -544,7 +567,7 @@ void Ghost::removeBehavior()
             {
                 break;
             }
-            case GHOST_FREEING:
+            case GHOST_FREEZING:
             {
                 setBehavior(GHOST_CHASE);
                 break;
@@ -567,6 +590,60 @@ void Ghost::removeBehavior()
 GHOST_BEHAVIOR Ghost::getBehavior()
 {
     return (curBehavior.empty()) ? (GHOST_UNSET) : (curBehavior.back());
+}
+
+///Mode function:
+//Mode:
+void Ghost::setMode(const GHOST_MODE newMode)
+{
+    curMode[newMode] = true;
+    startMode[newMode] = timer->getTicks();
+    initMode(newMode);
+    return;
+}
+
+void Ghost::initMode(const GHOST_MODE mode)
+{
+    switch (mode)
+    {
+        case GHOST_NORMAL:
+        {
+            removeMode(GHOST_FRIGHTENED_MODE);
+            removeMode(GHOST_BLIND_MODE);
+            removeMode(GHOST_FREEZING_MODE);
+            break;
+        }
+        case GHOST_FRIGHTENED_MODE:
+        case GHOST_BLIND_MODE:
+        case GHOST_FREEZING_MODE:
+            break;
+        default:
+            break;
+    }
+    return;
+}
+
+void Ghost::handleMode()
+{
+    for (int index = GHOST_FRIGHTENED_MODE; index < GHOST_MODE_TOTAL; index++)
+        if (curMode[index])
+        {
+            int timePast = timer->getTicks() - startMode[index];
+            if (timePast >= GHOST_MODE_TIME[index])
+                removeMode(index);
+        }
+}
+
+void Ghost::removeMode(const int mode)
+{
+    curMode[mode] = false;
+    startMode[mode] = 0;
+    return;
+}
+
+bool Ghost::isGhostMode(const GHOST_MODE checkMode)
+{
+    return curMode[checkMode];
 }
 
 //playing function:

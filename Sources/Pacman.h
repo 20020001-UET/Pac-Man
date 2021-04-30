@@ -37,7 +37,7 @@ enum PACMAN_POWER_STATE
     FREE_TIME_PACMAN,
     PACMAN_POWER_STATE_TOTAL
 };
-const int POWER_TIME[PACMAN_POWER_STATE_TOTAL] = {0, 8300, 4000, 4000, 7200};
+const int POWER_TIME[PACMAN_POWER_STATE_TOTAL] = {0, 8300, 4000, 4000, 5600};
 
 ///Pacman class
 class Pacman :
@@ -72,6 +72,8 @@ class Pacman :
         void initPower(PACMAN_POWER_STATE curNewPower);
         void handlePower();
         void removePower(int curLastPower);
+
+        bool isPacmanPower(const int checkPower);
 
         //playing function:
         DIRECTION getCurDirection();

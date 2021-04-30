@@ -56,6 +56,9 @@ bool Graphic::init(SDL_Renderer* _renderer, const int IMG_flags)
     //Black background
     clearScreen();
 
+    setTextureBlending(PACMAN, SDL_BLENDMODE_BLEND);
+    setTextureBlending(OBJECT, SDL_BLENDMODE_BLEND);
+
     console->writeLine("Initialized Graphic");
     return true;
 }
