@@ -62,12 +62,12 @@ Những tính năng mới được thêm vào trong game:
   - Dot "S": là dot tốc độ -> giúp Pacman có siêu tốc độ
   - Dot "T": là dot đóng băng thời gian -> khiến cho các vật thể ngoài Pacman ngừng chuyển động
   - Dot "I": là dot tàng hình -> giúp Pacman tàng hình
--  Pacman giờ có thêm 2 nhân vật:
-  -  Ms Pacman
-  -  Android Pacman
--  Đã thêm tính năng chọn nhân vật Pacman (trong setting)
--  Đã thêm tính năng Fruit bonus điểm cho trò chơi
--  Đã random các Big dot trên màn chơi
+- Pacman giờ có thêm 2 nhân vật:
+  - Ms Pacman
+  - Android Pacman
+- Đã thêm tính năng chọn nhân vật Pacman (trong setting)
+- Đã thêm tính năng Fruit bonus điểm cho trò chơi
+- Đã random các Big dot trên màn chơi
 
 Những tính năng đang trong kế hoạch thêm vào game:
 - 1 Ghost mới tên là Golden là boss chính (kết hợp bởi 4 ghost cũ) có khả năng thả dot nhỏ trên đường đi và khả năng teleport nếu bị bắt. Khi Golden bị bắt đủ 3 lần nó sẽ chuyển sang trạng thái sợ hãi (frightened) và bạn sẽ được phép tấn công Golden. Golden có tổng cộng 3 mạng. 
