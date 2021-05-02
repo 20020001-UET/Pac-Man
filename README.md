@@ -20,13 +20,6 @@ Phần Game cổ điển bao gồm:
 - Ghost (bao gồm 4 nhân vật) là nhân vật sẽ đuổi Pacman -> nhằm không cho Pacman ăn các dot.
 - Luật chơi rất đơn giản, bạn ăn nhiều số dot nhất có thể, cố gắng né tránh và sử dụng dot to để đối phó với các con ma. Khi bạn đẽ ăn hết số dot trên màn hình, bạn sẽ qua màn tiếp theo.
 
-### Requirements
-Yêu cầu cho bài tập lớn là:
-- Sử dụng ngôn ngữ C++
-- Sử dụng thư viện đồ họa SDL2 
-- Game có đồ họa 2D và âm thanh
-- Game có ai cho quái
-
 ### Prepared
 Để chuẩn bị cho bài tập lớn, em cần chuẩn bị những kiến thức sau:
 - Kiến thức nền tảng: C++
@@ -52,8 +45,15 @@ Yêu cầu cho bài tập lớn là:
 
 ## Overview
 
-### Coding map
-Sơ dồ tổ chức project:
+### Playing
+Game gồm 8 level:
+Mỗi level của game yêu cầu người chơi điều khiển Pacman di chuyển trên map để ăn toàn bộ các dot vàng. 
+Khi toàn bộ số dot đã hết thì người chơi qua màn tiếp theo.
+Sau level 2 thì các con ma sẽ tiến hóa thành con ma mới với nhiều khả năng đặc biệt:
+- Blinky -> Deadly: giờ có thể làm Pacman mất 2 mạng khi cắn.
+- Pinky -> Speedy: có thể tăng tốc nhưng khi đến gần Pacman sẽ đi chậm lại. Khi cắn Pacman sẽ khiến Pacman bị chậm lại.
+- Inky -> Invisy: tàng hình trong 1.2s sau đó thoát ẩn, thoát hiện. Khi cắn Pacman sẽ khiến cho Pacman bị mù.
+- Clyde -> Freezy: không có gì thay đổi trừ việc khi cắn Pacman sẽ khiến Pacman bị đóng băng.
 
 ### New Features
 Những tính năng mới được thêm vào trong game:
@@ -72,7 +72,7 @@ Những tính năng mới được thêm vào trong game:
 
 Những tính năng đang trong kế hoạch thêm vào game:
 - 1 Ghost mới tên là Golden là boss chính (kết hợp bởi 4 ghost cũ) có khả năng thả dot nhỏ trên đường đi và khả năng teleport nếu bị bắt. Khi Golden bị bắt đủ 3 lần nó sẽ chuyển sang trạng thái sợ hãi (frightened) và bạn sẽ được phép tấn công Golden. Golden có tổng cộng 3 mạng. 
-- 1 Ghost mới tên là Deadly nguy hiểm, không bị ảnh hưởng bởi các Big dot và có khả năng tiêu diệt người chơi ngay lập tức!
+- 4 Ghost mới (là bản nâng cấp của 4 Ghost cổ điển)
 
 ## Control
 Người chơi sử dụng 4 phím trên bàn phím để di chuyển Pacman.  
@@ -170,14 +170,6 @@ Việc di chuyển của Ghost khá đơn giản:
 - Nếu Ghost đang ở ngã ba hoặc ngã tư hoặc nó đang ko biết đi thế nào (UNSET_DIRECTION) -> tính toán hướng đi mới cho Ghost (nếu Ghost dừng lại được (isStop()) ngược lại nó có thể dừng lại được (setStop(true))
 - Nếu Ghost đi được với hướng hiện tại -> cho Ghost đi (ghost->loop())
 - Nếu Ghost ko đi được -> cho Ghost dừng lại (setStop(true))
-
-### Blinky
-
-### Pinky
-
-### Inky
-
-### Clyde
 
 ## Presentation
 1. Chơi thử demo
