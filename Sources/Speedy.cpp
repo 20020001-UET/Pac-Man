@@ -1,17 +1,17 @@
-///Inky [Source]
-#include "Inky.h"
+///Speedy [Source]
+#include "Speedy.h"
 
 ///Include header
 
-///Inky class
+///Speedy class
 //Contructor:
-Inky::Inky() : Ghost(GHOST_INKY)
+Speedy::Speedy() : UniqueGhost(UNIQUE_GHOST_SPEEDY)
 {
     return;
 }
 
 //Destructor:
-Inky::~Inky()
+Speedy::~Speedy()
 {
     graphic = NULL;
     timer = NULL;
@@ -20,20 +20,24 @@ Inky::~Inky()
 
 ///function:
 //init:
-void Inky::init(Graphic* _graphic, Timer* _timer, Point _start_point, Point _stand, Point _scatter, Point _upgrade)
+void Speedy::init(Graphic* _graphic, Timer* _timer, Point _show_up, Point _start_point, Point _stand, Point _scatter)
 {
     graphic = _graphic;
     timer = _timer;
     sprite_val = frame = 0;
-    frame_value = GHOST_FRAME_VALUE;
+    frame_value = UNIQUE_GHOST_FRAME_VALUE;
 
     direction = UNSET_DIRECTION;
+    show_up = _show_up;
     start_point = _start_point;
     stand = _stand;
     scatter = _scatter;
-    upgrade = _upgrade;
 
-    upgraded = false;
+    showed_up = false;
+
+    lastPoint.clear();
+
+    setMode(UNIQUE_GHOST_NORMAL);
 
     setTile(stand);
     update();

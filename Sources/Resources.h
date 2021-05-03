@@ -27,6 +27,7 @@ enum RESOURCES_TYPE
     SCORE,
     FRUIT,
     UNIQUE_GHOST,
+    SPEECH,
     RESOURCES_TYPE_TOTAL
 };
 
@@ -120,6 +121,12 @@ enum OBJECT_TYPE
     OBJECT_KEY,
     OBJECT_FRUIT,
     OBJECT_PACMAN_LIFE,
+    OBJECT_MYSTERY,
+    OBJECT_DEADLY,
+    OBJECT_SPEEDY,
+    OBJECT_INVISY,
+    OBJECT_FREEZY,
+    OBJECT_GOLDEN,
     OBJECT_TYPE_TOTAL
 };
 
@@ -148,7 +155,8 @@ enum GHOST_SPRITE
     GHOST_RIGHT = 2,
     GHOST_DOWN = 4,
     GHOST_LEFT = 6,
-    GHOST_SPRITE_TOTAL = 8
+    GHOST_UPGRADE = 8,
+    GHOST_SPRITE_TOTAL = 11
 };
 
 const int PACMAN_DEATH_ANIMATION_FRAME = 11;
@@ -170,9 +178,13 @@ const int DOT_STATUS_HEIGHT = 16*3;
 enum DOT_STATUS
 {
     POWER_DOT_STATUS = 0,
+    CONFUSED_STATUS,
     SPEED_DOT_STATUS,
+    SLOW_DOWN_STATUS,
     INVISIBLE_DOT_STATUS,
+    BLIND_STATUS,
     TIME_FREE_DOT_STATUS,
+    FREEZE_STATUS,
     DOT_STATUS_TOTAL
 };
 
@@ -256,10 +268,56 @@ const int UNIQUE_GHOST_HEIGHT = 16*3;
 const int UNIQUE_ANIMATION_FRAME = 2;
 enum UNIQUE_GHOST_TYPE
 {
-    UNIQUE_GHOST_DEADLY = 0,
+    UNIQUE_GHOST_MYSTERY = 0,
+    UNIQUE_GHOST_DEADLY,
+    UNIQUE_GHOST_SPEEDY,
+    UNIQUE_GHOST_INVISY,
+    UNIQUE_GHOST_FREEZY,
     UNIQUE_GHOST_GOLDEN,
     UNIQUE_GHOST_TOTAL
 };
+
+const int UNIQUE_GHOST_MYSTERY_ANIMATION_FRAME = 2;
+enum UNIQUE_GHOST_MYSTERY_SPRITE
+{
+    UNIQUE_GHOST_MYSTERY_DEFAULT = 0,
+    UNIQUE_GHOST_MYSTERY_WHITE = 2,
+    UNIQUE_GHOST_MYSTERY_UPGRADE_DEFAULT = 4,
+    UNIQUE_GHOST_MYSTERY_UPGRADE_WHITE = 6,
+    UNIQUE_GHOST_MYSTERY_SPRITE_TOTAL = 8
+};
+
+enum UNIQUE_GHOST_SPRITE
+{
+    UNIQUE_GHOST_UP = 0,
+    UNIQUE_GHOST_RIGHT = 2,
+    UNIQUE_GHOST_DOWN = 4,
+    UNIQUE_GHOST_LEFT = 6,
+    UNIQUE_GHOST_SPRITE_TOTAL = 8
+};
+
+///Speech
+enum SPEECH_TYPE
+{
+    SPEECH_UPGRADE = 0,
+    SPEECH_SHOW_UP,
+    SPEECH_TYPE_TOTAL
+};
+
+enum SPEECH_UPGRADE_TYPE
+{
+    SPEECH_UPGRADE_BLINKY = 0,
+    SPEECH_UPGRADE_PINKY,
+    SPEECH_UPGRADE_INKY,
+    SPEECH_UPGRADE_CLYDE,
+    SPEECH_UPGRADE_TOTAL
+};
+const int SPEECH_UPGRADE_WIDTH = 44*3;
+const int SPEECH_UPGRADE_HEIGHT = 26*3;
+
+const int SPEECH_SHOW_UP_TOTAL = 2;
+const int SPEECH_SHOW_UP_WIDTH = 52*3;
+const int SPEECH_SHOW_UP_HEIGHT = 26*3;
 
 ///Resources class
 class Resources
@@ -299,6 +357,7 @@ class Resources
         SDL_Rect getSprite(const NUMBER_TYPE number_type, const int num);
         SDL_Rect getSprite(const SCORE_TYPE score_type, const int sprite_val);
         SDL_Rect getSprite(const FRUIT_TYPE fruit_type, const int sprite_val = 0);
+        SDL_Rect getSprite(const SPEECH_TYPE speech_type, const int sprite_val = 0);
 
     private:
         ///Console
@@ -315,6 +374,8 @@ class Resources
         SDL_Texture* alphabet;
         SDL_Texture* score;
         SDL_Texture* fruit;
+        SDL_Texture* unique_ghost;
+        SDL_Texture* speech;
 
         ///Sprites
         SDL_Rect background_sprite[BACKGROUND_TYPE_TOTAL];
@@ -326,9 +387,15 @@ class Resources
         SDL_Rect pacman_ms_sprite[PACMAN_SPRITE_TOTAL];
         SDL_Rect pacman_android_sprite[PACMAN_SPRITE_TOTAL];
         SDL_Rect blinky[GHOST_SPRITE_TOTAL];
+        SDL_Rect mystery[UNIQUE_GHOST_MYSTERY_SPRITE_TOTAL];
+        SDL_Rect deadly[UNIQUE_GHOST_SPRITE_TOTAL];
         SDL_Rect pinky[GHOST_SPRITE_TOTAL];
+        SDL_Rect speedy[UNIQUE_GHOST_SPRITE_TOTAL];
         SDL_Rect inky[GHOST_SPRITE_TOTAL];
+        SDL_Rect invisy[UNIQUE_GHOST_SPRITE_TOTAL];
         SDL_Rect clyde[GHOST_SPRITE_TOTAL];
+        SDL_Rect freezy[UNIQUE_GHOST_SPRITE_TOTAL];
+        SDL_Rect golden[UNIQUE_GHOST_SPRITE_TOTAL];
         SDL_Rect pacman_death[PACMAN_DEATH_SPRITE_TOTAL];
         SDL_Rect dot[DOT_SPRITE_TOTAL];
         SDL_Rect dot_status[DOT_STATUS_TOTAL];
@@ -339,6 +406,8 @@ class Resources
         SDL_Rect alphabet_sprite[ALPHABET_TYPE_TOTAL][ALPHABET_TOTAL];
         SDL_Rect score_sprite[SCORE_TYPE_TOTAL];
         SDL_Rect fruit_sprite[FRUIT_TYPE_TOTAL][FRUIT_SPRITE_TOTAL];
+        SDL_Rect speech_upgrade[SPEECH_UPGRADE_TOTAL];
+        SDL_Rect speech_show_up[SPEECH_SHOW_UP_TOTAL];
 
         ///Texture
         Texture* texture;

@@ -10,7 +10,9 @@
 
 ///Pacman constance value
 const int PACMAN_SPEED = 3;
+const int PACMAN_SLOW_DOWN_SPEED = 2;
 const int PACMAN_FRAME_VALUE = 4;
+const int PACMAN_SLOW_DOWN_FRAME_VALUE = 8;
 const int PACMAN_LIFE = 5;
 
 ///Pacman state
@@ -32,12 +34,16 @@ enum PACMAN_POWER_STATE
 {
     NORMAL_PACMAN = 0,
     POWER_PACMAN,
+    CONFUSED_PACMAN,
     SPEED_PACMAN,
+    SLOW_DOWN_PACMAN,
     INVISIBLE_PACMAN,
+    BLIND_PACMAN,
     FREE_TIME_PACMAN,
+    FREEZE_PACMAN,
     PACMAN_POWER_STATE_TOTAL
 };
-const int POWER_TIME[PACMAN_POWER_STATE_TOTAL] = {0, 8300, 4000, 4000, 5600};
+const int POWER_TIME[PACMAN_POWER_STATE_TOTAL] = {0, 8300, 4000, 3200, 4000, 4000, 5200, 5600, 3200};
 
 ///Pacman class
 class Pacman :
@@ -80,13 +86,18 @@ class Pacman :
         DIRECTION getLastDirection();
         void setDirection(DIRECTION newDirection);
         void eatDot();
+        void eatFruit();
         void stop(bool canPacmanMove = true);
 
         bool isDead();
-        void dead();
+        void dead(const int value = 1);
 
         //dot function:
         int getDotEaten() const;
+
+        //fruit function:
+        void gainLife();
+        int getFruitEaten() const;
 
         //life function:
         int getCurLife() const;
@@ -107,7 +118,7 @@ class Pacman :
         //Direction
         std::queue<Direction> direction;
         int speed;
-        int dotEaten;
+        int dotEaten, fruitEaten;
         int life;
 
         Point stand;

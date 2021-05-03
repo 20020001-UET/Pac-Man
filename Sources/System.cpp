@@ -195,6 +195,8 @@ void System::saveHighscore(Uint32 score, int level, std::string path)
         console->writeLine("Could not write highscore file!");
     }
 
+    highscore_file.close();
+
     return;
 }
 

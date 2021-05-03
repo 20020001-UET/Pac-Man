@@ -22,6 +22,8 @@ Resources::Resources()
     alphabet = NULL;
     score = NULL;
     fruit = NULL;
+    unique_ghost = NULL;
+    speech = NULL;
 
     for (int index = 0; index < SETTING_BUTTON_TYPE_TOTAL; index++)
         for (int sprite = 0; sprite < SETTING_BUTTON_SPRITE_TOTAL; sprite++)
@@ -85,6 +87,10 @@ void Resources::load()
     score = texture->load("Assets/Texture/score.png");
 
     fruit = texture->load("Assets/Texture/fruits.png");
+
+    unique_ghost = texture->load("Assets/Texture/uniqueGhost.png");
+
+    speech = texture->load("Assets/Texture/speech.png");
 
     return;
 }
@@ -232,13 +238,6 @@ void Resources::create()
     }
     console->writeLine("Created dot sprites");
 
-    for (int index = 0; index < DOT_STATUS_TOTAL; index++)
-    {
-        dot_status[index] = {cnt*OBJECT_PIXEL, height_sprite*OBJECT_PIXEL, OBJECT_PIXEL, OBJECT_PIXEL};
-        cnt++;
-    }
-    console->writeLine("Created dot status sprites");
-
     //Line 6
     height_sprite++;
     for (int index = 0; index < PACMAN_DEATH_SPRITE_TOTAL; index++)
@@ -264,6 +263,16 @@ void Resources::create()
         }
     }
     console->writeLine("Created level sprites");
+
+    //Line 8
+    height_sprite++;
+    cnt = 0;
+    for (int index = 0; index < DOT_STATUS_TOTAL; index++)
+    {
+        dot_status[index] = {cnt*OBJECT_PIXEL, height_sprite*OBJECT_PIXEL, OBJECT_PIXEL, OBJECT_PIXEL};
+        cnt++;
+    }
+    console->writeLine("Created dot status sprites");
 
     ///Labyrinth sprites
     for (int index = 0; index < LABYRINTH_TYPE_TOTAL; index++)
@@ -307,6 +316,63 @@ void Resources::create()
     }
     console->writeLine("Created fruits sprites");
 
+    ///Unique ghost sprite
+    //Line 0
+    height_sprite = 0;
+    for (int index = 0; index < UNIQUE_GHOST_MYSTERY_SPRITE_TOTAL; index++)
+    {
+        mystery[index] = {index*OBJECT_PIXEL, height_sprite*OBJECT_PIXEL, OBJECT_PIXEL, OBJECT_PIXEL};
+    }
+    console->writeLine("Created mystery sprites");
+
+    //Line 1
+    height_sprite++;
+    for (int index = 0; index < UNIQUE_GHOST_SPRITE_TOTAL; index++)
+    {
+        deadly[index] = {index*OBJECT_PIXEL, height_sprite*OBJECT_PIXEL, OBJECT_PIXEL, OBJECT_PIXEL};
+    }
+    console->writeLine("Created deadly sprites");
+
+    //Line 2
+    height_sprite++;
+    for (int index = 0; index < UNIQUE_GHOST_SPRITE_TOTAL; index++)
+    {
+        speedy[index] = {index*OBJECT_PIXEL, height_sprite*OBJECT_PIXEL, OBJECT_PIXEL, OBJECT_PIXEL};
+    }
+    console->writeLine("Created speedy sprites");
+
+    //Line 3
+    height_sprite++;
+    for (int index = 0; index < UNIQUE_GHOST_SPRITE_TOTAL; index++)
+    {
+        invisy[index] = {index*OBJECT_PIXEL, height_sprite*OBJECT_PIXEL, OBJECT_PIXEL, OBJECT_PIXEL};
+    }
+    console->writeLine("Created invisy sprites");
+
+    //Line 4
+    height_sprite++;
+    for (int index = 0; index < UNIQUE_GHOST_SPRITE_TOTAL; index++)
+    {
+        freezy[index] = {index*OBJECT_PIXEL, height_sprite*OBJECT_PIXEL, OBJECT_PIXEL, OBJECT_PIXEL};
+    }
+    console->writeLine("Created freezy sprites");
+
+    ///Speech sprites
+    //Line 0
+    height_sprite = 0;
+    for (int index = 0; index < SPEECH_UPGRADE_TOTAL; index++)
+    {
+        speech_upgrade[index] = {index*SPEECH_UPGRADE_WIDTH, height_sprite*SPEECH_UPGRADE_HEIGHT, SPEECH_UPGRADE_WIDTH, SPEECH_UPGRADE_HEIGHT};
+    }
+    console->writeLine("Created upgrade speech sprites");
+
+    //Line 1
+    height_sprite++;
+    for (int index = 0; index < SPEECH_SHOW_UP_TOTAL; index++)
+    {
+        speech_show_up[index] = {index*SPEECH_SHOW_UP_WIDTH, height_sprite*SPEECH_SHOW_UP_HEIGHT, SPEECH_SHOW_UP_WIDTH, SPEECH_SHOW_UP_HEIGHT};
+    }
+    console->writeLine("Created show up speech sprites");
     return;
 }
 
@@ -344,6 +410,12 @@ SDL_Texture* Resources::getTexture(const RESOURCES_TYPE resources_type)
             break;
         case FRUIT:
             tmpTexture = fruit;
+            break;
+        case UNIQUE_GHOST:
+            tmpTexture = unique_ghost;
+            break;
+        case SPEECH:
+            tmpTexture = speech;
             break;
         default:
             break;
@@ -426,6 +498,24 @@ SDL_Rect Resources::getSprite(const OBJECT_TYPE object_type, const int sprite_va
         case OBJECT_PACMAN_LIFE:
             tmpRect = pacman_life;
             break;
+        case OBJECT_MYSTERY:
+            tmpRect = mystery[sprite_val];
+            break;
+        case OBJECT_DEADLY:
+            tmpRect = deadly[sprite_val];
+            break;
+        case OBJECT_SPEEDY:
+            tmpRect = speedy[sprite_val];
+            break;
+        case OBJECT_INVISY:
+            tmpRect = invisy[sprite_val];
+            break;
+        case OBJECT_FREEZY:
+            tmpRect = freezy[sprite_val];
+            break;
+        case OBJECT_GOLDEN:
+            tmpRect = golden[sprite_val];
+            break;
         default:
             break;
     }
@@ -460,6 +550,23 @@ SDL_Rect Resources::getSprite(const FRUIT_TYPE fruit_type, const int sprite_val)
     return tmpRect;
 }
 
+SDL_Rect Resources::getSprite(const SPEECH_TYPE speech_type, const int sprite_val)
+{
+    SDL_Rect tmpRect = {0, 0, 0, 0};
+    switch (speech_type)
+    {
+        case SPEECH_UPGRADE:
+            tmpRect = speech_upgrade[sprite_val];
+            break;
+        case SPEECH_SHOW_UP:
+            tmpRect = speech_show_up[sprite_val];
+            break;
+        default:
+            break;
+    }
+    return tmpRect;
+}
+
 //free:
 void Resources::free()
 {
@@ -486,14 +593,20 @@ void Resources::free()
     SDL_DestroyTexture(number);
     number = NULL;
 
-    SDL_DestroyTexture(alphabet);
-    alphabet = NULL;
+    //SDL_DestroyTexture(alphabet);
+    //alphabet = NULL;
 
     SDL_DestroyTexture(score);
     score = NULL;
 
     SDL_DestroyTexture(fruit);
-    score = NULL;
+    fruit = NULL;
+
+    SDL_DestroyTexture(unique_ghost);
+    unique_ghost = NULL;
+
+    SDL_DestroyTexture(speech);
+    speech = NULL;
 
     return;
 }

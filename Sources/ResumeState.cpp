@@ -100,6 +100,7 @@ void ResumeState::keyReleased(const int key_code)
     {
         case SDLK_ESCAPE:
             system->timer->unpause();
+            system->audio->unpause();
             pull(CLOSE_STATE);
             break;
         case SDLK_RETURN:

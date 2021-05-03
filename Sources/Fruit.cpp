@@ -151,6 +151,12 @@ void Fruit::initState()
             stop = true;
             direction.type = UNSET_DIRECTION;
             outOfStandPosition = true;
+
+            //set Ghost position:
+            setTile(wait);
+            screen.x -= RESOURCES_PIXEL/2;
+            dest.x = screen.x - RESOURCES_PIXEL/2;
+
             break;
         }
         default:
