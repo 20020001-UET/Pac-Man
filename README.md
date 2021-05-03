@@ -10,6 +10,7 @@ Bài tập lớn - Game (môn học: Lập trình Nâng cao - INT2215 6)
 **[References](#references)**  
 **[Overview](#overview)**  
 **[Ghost AI](#ghost-ai)**  
+**[Demo Videos](#demo-videos)**
 
 ## Started
 
@@ -174,3 +175,6 @@ Việc di chuyển của Ghost khá đơn giản:
 ## Presentation
 1. Chơi thử demo
 2. Trình bày sources nguồn
+
+## Demo videos
+[Link drive các video demo về game](https://drive.google.com/drive/folders/1wSHAdCgVVikGCHcD1pu0RlE2v475jzOv?usp=sharing)
