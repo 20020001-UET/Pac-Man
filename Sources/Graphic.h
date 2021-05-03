@@ -33,6 +33,7 @@ class Graphic
         void draw(const OBJECT_TYPE object_type, const int sprite_val, const SDL_Rect object_dest);
         void draw(const LABYRINTH_TYPE labyrinth_type, const SDL_Rect labyrinth_dest);
         void draw(const FRUIT_TYPE fruit_type, const int sprite_val, const SDL_Rect fruit_dest);
+        void draw(const SPEECH_TYPE speech_type, const int sprite_val, const Point dest_point);
 
         //render text:
         void renderNumber(const NUMBER_TYPE number_type, const int number, const Point dest_point);

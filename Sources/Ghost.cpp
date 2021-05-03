@@ -48,7 +48,7 @@ Ghost::~Ghost()
 
 ///function:
 //init:
-void Ghost::init(Graphic* _graphic, Timer* _timer, Point _start_point, Point _stand, Point _scatter)
+void Ghost::init(Graphic* _graphic, Timer* _timer, Point _start_point, Point _stand, Point _scatter, Point _upgrade)
 {
     graphic = _graphic;
     timer = _timer;
@@ -59,6 +59,9 @@ void Ghost::init(Graphic* _graphic, Timer* _timer, Point _start_point, Point _st
     start_point = _start_point;
     stand = _stand;
     scatter = _scatter;
+    upgrade = _upgrade;
+
+    upgraded = false;
 
     setTile(stand);
     update();
@@ -85,6 +88,22 @@ void Ghost::handleRender()
     GHOST_BEHAVIOR cur_behavior = curBehavior.back();
 
     OBJECT_TYPE cur_type = type;
+
+    if (cur_behavior == GHOST_UPGRADE_UNIQUE)
+    {
+        int tickPast = GHOST_BEHAVIOR_TIME[cur_behavior] - (timer->getTicks() - startBehavior.front());
+        sprite_val = 0;
+        if (tickPast <= 2000)
+        {
+            if ((tickPast/200) % 2 == 0)
+                sprite_val = 1;
+            else
+                sprite_val = 2;
+        }
+        sprite_val += GHOST_UPGRADE;
+        graphic->draw(type, sprite_val, dest);
+        return;
+    }
 
     switch (cur_behavior)
     {
@@ -180,6 +199,7 @@ void Ghost::handleRender()
 
         if (tickLeft <= 2000)
         {
+            graphic->setTextureAlpha(OBJECT, 0x7F);
             if ((tickLeft/200 % 2) != 0)
                 graphic->setTextureAlpha(OBJECT, 0xFF);
         }
@@ -208,6 +228,19 @@ void Ghost::render()
 //behavior:
 void Ghost::setBehavior(const GHOST_BEHAVIOR newBehavior)
 {
+    if (newBehavior == GHOST_UPGRADE_UNIQUE)
+    {
+        while (!curBehavior.empty())
+        {
+            curBehavior.pop();
+            startBehavior.pop();
+        }
+        curBehavior.push(newBehavior);
+        startBehavior.push(timer->getTicks());
+        initBehavior();
+        return;
+    }
+
     if (!curBehavior.empty())
     {
         if (curBehavior.front() == GHOST_STAND && newBehavior != GHOST_SCATTER)
@@ -414,6 +447,23 @@ void Ghost::initBehavior()
             frame_value = GHOST_FRAME_VALUE;
             break;
         }
+        case GHOST_UPGRADE_UNIQUE:
+        {
+            animated = true;
+            stop = true;
+            direction.type = UNSET_DIRECTION;
+            upgraded = false;
+            speed = 0;
+
+            //set Ghost position:
+            setTile(upgrade);
+            screen.x -= RESOURCES_PIXEL/2;
+            dest.x = screen.x - RESOURCES_PIXEL/2;
+
+            frame = 0;
+            frame_value = GHOST_FRAME_VALUE/2;
+            break;
+        }
         default:
             break;
     }
@@ -424,6 +474,17 @@ void Ghost::handleBehavior()
 {
     if (!curBehavior.empty())
     {
+        if (curBehavior.back() == GHOST_UPGRADE_UNIQUE)
+        {
+            int tickLeft = timer->getTicks() - startBehavior.front();
+            if (tickLeft >= GHOST_BEHAVIOR_TIME[curBehavior.front()])
+            {
+                upgraded = true;
+                return;
+            }
+            return;
+        }
+
         if (curBehavior.back() == GHOST_FREEZING || curBehavior.back() == GHOST_REBORN)
         {
             removeBehavior();
@@ -435,7 +496,6 @@ void Ghost::handleBehavior()
                 return;
             }
     }
-
 
     if (getCurDirection() != UNSET_DIRECTION)
         move(direction.vel()*speed);
@@ -706,7 +766,17 @@ Point Ghost::getStartPoint()
     return start_point;
 }
 
+Point Ghost::getUpgrade()
+{
+    return upgrade;
+}
+
 GHOST_TYPE Ghost::getType()
 {
     return ghost_type;
+}
+
+bool Ghost::isUpgraded()
+{
+    return upgraded;
 }

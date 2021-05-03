@@ -41,9 +41,10 @@ enum GHOST_BEHAVIOR
     GHOST_FREEZING,
     GHOST_LEAVE_GHOST_HOUSE,
     GHOST_ENTER_GHOST_HOUSE,
+    GHOST_UPGRADE_UNIQUE,
     GHOST_BEHAVIOR_TOTAL
 };
-const int GHOST_BEHAVIOR_TIME[GHOST_BEHAVIOR_TOTAL] = {0, 0, 20000, 7000, 8300, 960, -1, 240, 4000, 5600, -1, -1};
+const int GHOST_BEHAVIOR_TIME[GHOST_BEHAVIOR_TOTAL] = {0, 0, 20000, 7000, 8300, 960, -1, 240, 4000, 5600, -1, -1, 3200};
 
 ///Ghost mode
 enum GHOST_MODE
@@ -69,7 +70,7 @@ class Ghost:
 
         ///function:
         //init:
-        virtual void init(Graphic* _graphic, Timer* timer, Point _start_point, Point _stand, Point _scatter);
+        virtual void init(Graphic* _graphic, Timer* timer, Point _start_point, Point _stand, Point _scatter, Point _upgrade);
 
         //loop:
         void loop();
@@ -113,8 +114,11 @@ class Ghost:
         Point getScatter();
         Point getStand();
         Point getStartPoint();
+        Point getUpgrade();
 
         GHOST_TYPE getType();
+
+        bool isUpgraded();
 
     protected:
         ///Ghost type
@@ -133,10 +137,10 @@ class Ghost:
 
         ///Playing value
         Point target;
-        Point start_point, scatter, stand;
+        Point start_point, scatter, stand, upgrade;
         Direction direction;
         int speed;
-        bool stop;
+        bool stop, upgraded;
 
         bool outGhostHouse;
 

@@ -20,7 +20,7 @@ Clyde::~Clyde()
 
 ///function:
 //init:
-void Clyde::init(Graphic* _graphic, Timer* _timer, Point _start_point, Point _stand, Point _scatter)
+void Clyde::init(Graphic* _graphic, Timer* _timer, Point _start_point, Point _stand, Point _scatter, Point _upgrade)
 {
     graphic = _graphic;
     timer = _timer;
@@ -31,6 +31,9 @@ void Clyde::init(Graphic* _graphic, Timer* _timer, Point _start_point, Point _st
     start_point = _start_point;
     stand = _stand;
     scatter = _scatter;
+    upgrade = _upgrade;
+
+    upgraded = false;
 
     setTile(stand);
     update();

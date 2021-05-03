@@ -39,6 +39,8 @@ void Pacman::init(Graphic* _graphic, Timer* _timer, Point _stand)
 
     stand = _stand;
 
+    lastPoint.clear();
+
     return;
 }
 
@@ -152,7 +154,9 @@ void Pacman::initState()
         case PACMAN_INIT_STATE:
         {
             setPower(NORMAL_PACMAN);
+            sprite_val = 0;
             dotEaten = 0;
+            fruitEaten = 0;
             life = PACMAN_LIFE;
 
             type = OBJECT_PACMAN;
@@ -166,6 +170,8 @@ void Pacman::initState()
 
             setState(PACMAN_STAND_STATE);
 
+            lastPoint.clear();
+
             graphic->setTextureAlpha(PACMAN, 0xFF);
 
             break;
@@ -173,6 +179,7 @@ void Pacman::initState()
         case PACMAN_NEW_STATE:
         {
             setPower(NORMAL_PACMAN);
+            sprite_val = 0;
 
             type = OBJECT_PACMAN;
             if (pacman_type == PACMAN_MS)
@@ -224,6 +231,8 @@ void Pacman::initState()
         {
             clearQueue();
 
+            sprite_val = 0;
+
             animated = true;
             frame = 0;
             frame_value = 16;
@@ -256,6 +265,8 @@ void Pacman::handleState()
         }
         case PACMAN_RUNNING_STATE:
         {
+            if (power[FREEZE_PACMAN])
+                break;
             if (!direction.empty())
                 move(direction.front().vel()*speed);
             break;
@@ -283,7 +294,7 @@ void Pacman::setPower(PACMAN_POWER_STATE newPower)
 {
     if (newPower == NORMAL_PACMAN)
     {
-        for (int index = 0; index <= PACMAN_POWER_STATE_TOTAL; index++)
+        for (int index = 0; index < PACMAN_POWER_STATE_TOTAL; index++)
         {
             power[index] = false;
             startPower[index] = 0;
@@ -312,14 +323,32 @@ void Pacman::initPower(PACMAN_POWER_STATE curNewPower)
         }
         case POWER_PACMAN:
         {
-
+            if (power[CONFUSED_PACMAN])
+                removePower(CONFUSED_PACMAN);
+            break;
+        }
+        case CONFUSED_PACMAN:
+        {
+            if (power[POWER_PACMAN])
+                removePower(POWER_PACMAN);
             break;
         }
         case SPEED_PACMAN:
         {
+            if (power[SLOW_DOWN_PACMAN])
+                removePower(SLOW_DOWN_PACMAN);
             if (checkScreen())
                 speed = 4;
             frame_value = 2;
+            break;
+        }
+        case SLOW_DOWN_PACMAN:
+        {
+            if (power[SPEED_PACMAN])
+                removePower(SPEED_PACMAN);
+            if (checkScreen())
+                speed = PACMAN_SLOW_DOWN_SPEED;
+            frame_value = PACMAN_SLOW_DOWN_FRAME_VALUE;
             break;
         }
         case INVISIBLE_PACMAN:
@@ -327,9 +356,18 @@ void Pacman::initPower(PACMAN_POWER_STATE curNewPower)
             graphic->setTextureAlpha(PACMAN, 75);
             break;
         }
+        case BLIND_PACMAN:
+        {
+            break;
+        }
         case FREE_TIME_PACMAN:
         {
 
+            break;
+        }
+        case FREEZE_PACMAN:
+        {
+            graphic->setTextureAlpha(PACMAN, 128);
             break;
         }
         default:
@@ -354,6 +392,7 @@ void Pacman::handlePower()
                 switch (curPower)
                 {
                     case POWER_PACMAN:
+                    case CONFUSED_PACMAN:
                     {
                         break;
                     }
@@ -363,11 +402,19 @@ void Pacman::handlePower()
                             speed = 4;
                         break;
                     }
+                    case SLOW_DOWN_PACMAN:
+                    {
+                        if (checkScreen())
+                            speed = PACMAN_SLOW_DOWN_SPEED;
+                        break;
+                    }
                     case INVISIBLE_PACMAN:
+                    case BLIND_PACMAN:
                     {
                         break;
                     }
                     case FREE_TIME_PACMAN:
+                    case FREEZE_PACMAN:
                     {
                         break;
                     }
@@ -396,6 +443,7 @@ void Pacman::removePower(int curLastPower)
         case POWER_PACMAN:
         {
             type = OBJECT_PACMAN;
+
             if (pacman_type == PACMAN_MS)
                 type = OBJECT_PACMAN_MS;
 
@@ -413,13 +461,31 @@ void Pacman::removePower(int curLastPower)
             frame_value = PACMAN_FRAME_VALUE;
             break;
         }
+        case SLOW_DOWN_PACMAN:
+        {
+            if (speed != PACMAN_SPEED)
+                if (checkScreen())
+                    speed = PACMAN_SPEED;
+            frame_value = PACMAN_FRAME_VALUE;
+            graphic->setTextureAlpha(PACMAN, 0xFF);
+            break;
+        }
         case INVISIBLE_PACMAN:
         {
             graphic->setTextureAlpha(PACMAN, 0xFF);
             break;
         }
+        case BLIND_PACMAN:
+        {
+            break;
+        }
         case FREE_TIME_PACMAN:
         {
+            break;
+        }
+        case FREEZE_PACMAN:
+        {
+            graphic->setTextureAlpha(PACMAN, 0xFF);
             break;
         }
     }
@@ -444,6 +510,9 @@ DIRECTION Pacman::getLastDirection()
 
 void Pacman::setDirection(DIRECTION newDirection)
 {
+    if (power[FREEZE_PACMAN])
+        return;
+
     if (curState == PACMAN_STAND_STATE)
     {
         if (newDirection == RIGHT || newDirection == LEFT)
@@ -468,6 +537,12 @@ void Pacman::eatDot()
     return;
 }
 
+void Pacman::eatFruit()
+{
+    fruitEaten++;
+    return;
+}
+
 void Pacman::stop(bool canPacmanMove)
 {
     if (direction.size() > 1)
@@ -484,9 +559,9 @@ bool Pacman::isDead()
     return (life <= 0);
 }
 
-void Pacman::dead()
+void Pacman::dead(const int value)
 {
-    life--;
+    life -= value;
     return;
 }
 
@@ -494,6 +569,19 @@ void Pacman::dead()
 int Pacman::getDotEaten() const
 {
     return dotEaten;
+}
+
+//fruit function:
+void Pacman::gainLife()
+{
+    life++;
+    fruitEaten -= 4;
+    return;
+}
+
+int Pacman::getFruitEaten() const
+{
+    return fruitEaten;
 }
 
 //life function:

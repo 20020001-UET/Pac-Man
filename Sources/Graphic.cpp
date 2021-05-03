@@ -102,6 +102,8 @@ void Graphic::draw(const OBJECT_TYPE object_type, const int sprite_val, const SD
     RESOURCES_TYPE resources_type = OBJECT;
     if (object_type == OBJECT_PACMAN || object_type == OBJECT_PACMAN_MS || object_type == OBJECT_PACMAN_ANDROID)
         resources_type = PACMAN;
+    if (object_type == OBJECT_MYSTERY || object_type == OBJECT_DEADLY || object_type == OBJECT_SPEEDY || object_type == OBJECT_INVISY || object_type == OBJECT_FREEZY || object_type == OBJECT_GOLDEN)
+        resources_type = UNIQUE_GHOST;
 
     SDL_Texture* tmpTexture = resources->getTexture(resources_type);
 
@@ -124,6 +126,20 @@ void Graphic::draw(const FRUIT_TYPE fruit_type, const int sprite_val, const SDL_
     texture->draw(resources->getTexture(RESOURCES_TYPE::FRUIT),
                   resources->getSprite(fruit_type, sprite_val),
                   fruit_dest);
+    return;
+}
+
+void Graphic::draw(const SPEECH_TYPE speech_type, const int sprite_val, const Point dest_point)
+{
+    SDL_Rect dest = {dest_point.x, dest_point.y, SPEECH_UPGRADE_WIDTH, SPEECH_UPGRADE_HEIGHT};
+    if (speech_type == SPEECH_SHOW_UP)
+    {
+        dest.w = SPEECH_SHOW_UP_WIDTH;
+        dest.h = SPEECH_SHOW_UP_HEIGHT;
+    }
+    texture->draw(resources->getTexture(RESOURCES_TYPE::SPEECH),
+                  resources->getSprite(speech_type, sprite_val),
+                  dest);
     return;
 }
 

@@ -18,7 +18,7 @@ class Inky:
 
         ///function:
         //init:
-        void init(Graphic* _graphic, Timer* _timer, Point _start_point = Point(), Point _stand = Point(), Point _scatter = Point());
+        void init(Graphic* _graphic, Timer* _timer, Point _start_point = Point(), Point _stand = Point(), Point _scatter = Point(), Point _upgrade = Point());
 
     private:
 

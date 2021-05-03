@@ -213,14 +213,12 @@ void GameStatus::render()
     destination = {power_point.x, power_point.y, DOT_STATUS_WIDTH, DOT_STATUS_HEIGHT};
     for (int index = 1; index < PACMAN_POWER_STATE_TOTAL; index++)
     {
-        graphic->setTextureAlpha(OBJECT, 0x55);
         if (power[index])
         {
             graphic->setTextureAlpha(OBJECT, 0xFF);
+            graphic->draw(OBJECT_DOT_STATUS, index-1, destination);
+            destination.x += OBJECT_PIXEL;
         }
-        graphic->draw(OBJECT_DOT_STATUS, index-1, destination);
-        graphic->setTextureAlpha(OBJECT, 0xFF);
-        destination.x += OBJECT_PIXEL;
     }
 
     return;

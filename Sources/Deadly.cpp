@@ -1,39 +1,45 @@
-///Blinky [Source]
-#include "Blinky.h"
+///Deadly [Source]
+#include "Deadly.h"
 
 ///Include header
 
-///Blinky class
+///Deadly class
 //Contructor:
-Blinky::Blinky() : Ghost(GHOST_BLINKY)
+Deadly::Deadly() : UniqueGhost(UNIQUE_GHOST_DEADLY)
 {
+    lastPoint.clear();
     return;
 }
 
 //Destructor:
-Blinky::~Blinky()
+Deadly::~Deadly()
 {
     graphic = NULL;
     timer = NULL;
+    lastPoint.clear();
     return;
 }
 
 ///function:
 //init:
-void Blinky::init(Graphic* _graphic, Timer* _timer, Point _start_point, Point _stand, Point _scatter, Point _upgrade)
+void Deadly::init(Graphic* _graphic, Timer* _timer, Point _show_up, Point _start_point, Point _stand, Point _scatter)
 {
     graphic = _graphic;
     timer = _timer;
     sprite_val = frame = 0;
-    frame_value = GHOST_FRAME_VALUE;
+    frame_value = UNIQUE_GHOST_FRAME_VALUE;
 
     direction = UNSET_DIRECTION;
+    show_up = _show_up;
     start_point = _start_point;
     stand = _stand;
     scatter = _scatter;
-    upgrade = _upgrade;
 
-    upgraded = false;
+    showed_up = false;
+
+    lastPoint.clear();
+
+    setMode(UNIQUE_GHOST_NORMAL);
 
     setTile(stand);
     update();
@@ -41,7 +47,7 @@ void Blinky::init(Graphic* _graphic, Timer* _timer, Point _start_point, Point _s
     return;
 }
 
-void Blinky::leaveGhostHouse()
+void Deadly::leaveGhostHouse()
 {
     if (tile == start_point)
     {

@@ -20,11 +20,18 @@ enum EFFECT_TYPE
 {
     CREDIT = 0,
     MUNCH,
+    EXTEND,
+    UPGRADE,
     POWER_PELLET,
     SIREN,
     DEATH,
     EAT_GHOST,
     EAT_FRUIT,
+    CONFUSED,
+    FREEZE,
+    SPEED,
+    BOSS_SHOW_UP,
+    UPGRADE_MYSTERY,
     EFFECT_TYPE_TOTAL
 };
 
@@ -92,11 +99,18 @@ class Audio
         ///Effects
         Mix_Chunk* credit;
         Mix_Chunk* munch;
+        Mix_Chunk* upgrade;
+        Mix_Chunk* extend;
         Mix_Chunk* power_pellet;
         Mix_Chunk* siren;
         Mix_Chunk* death;
         Mix_Chunk* eat_ghost;
         Mix_Chunk* eat_fruit;
+        Mix_Chunk* confused;
+        Mix_Chunk* freeze;
+        Mix_Chunk* speed;
+        Mix_Chunk* boss_show_up;
+        Mix_Chunk* upgrade_mystery;
 
         ///System value
         int musicVolume;

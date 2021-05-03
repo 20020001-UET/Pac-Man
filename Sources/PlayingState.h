@@ -15,6 +15,11 @@
 #include "Clyde.h"
 #include "GameStatus.h"
 #include "Fruit.h"
+#include "Deadly.h"
+#include "Speedy.h"
+#include "Invisy.h"
+#include "Freezy.h"
+#include "Mystery.h"
 
 ///States of playing
 enum STATE_OF_PLAYING
@@ -22,6 +27,7 @@ enum STATE_OF_PLAYING
     NEW_GAME = 0,
     NEW_LIFE_GAME,
     PLAYING_GAME,
+    UPGRADE_GHOST_GAME,
     //PAUSED_GAME,
     NEXT_LEVEL_GAME,
     END_GAME,
@@ -46,8 +52,21 @@ const Point LIFE_POINT = Point(0*3, 276*3);
 const Point LEVEL_POINT = Point(128*3, 276*3);
 const Point POWER_POINT = Point(0*3, 0*3);
 
+///Mystery Speech Point
+const Point MYSTERY_SPEECH_UPGRADE_POINT = Point(90*3, 106*3);
+const Point MYSTERY_SPEECH_SHOW_UP_POINT = Point(86*3, 106*3);
+
 ///Pacman type
 const PACMAN_TYPE PACMAN_TYPE_AT[PACMAN_TYPE_TOTAL] = {PACMAN_DEFAULT, PACMAN_MS, PACMAN_ANDROID};
+
+///Behavior type
+enum GHOST_BEHAVIOR_TYPE
+{
+    BEHAVIOR_FRIGHTENED = 0,
+    BEHAVIOR_BLIND,
+    BEHAVIOR_FREEZING,
+    GHOST_BEHAVIOR_TYPE_TOTAL
+};
 
 ///PlayingState
 class PlayingState:
@@ -91,6 +110,17 @@ class PlayingState:
         //get control
         void getControl();
 
+        //handle ghost with unique ghost
+        void renderGhost(Ghost* ghost, UniqueGhost* unique_ghost);
+        void initGhostInit(Ghost* ghost, UniqueGhost* unique_ghost);
+        void handleGhostLoop(Ghost* ghost, UniqueGhost* unique_ghost, Blinky* blinky, Deadly* deadly);
+        void handleGhostDeadLoop(Ghost* ghost, UniqueGhost* unique_ghost, Blinky* blinky, Deadly* deadly);
+        void handleGhostMode(Ghost* ghost, UniqueGhost* unique_ghost);
+        void handleGhostOut(const int dot_require, Ghost* ghost, UniqueGhost* unique_ghost);
+        void setGhostBehavior(Ghost* ghost, UniqueGhost* unique_ghost, GHOST_BEHAVIOR_TYPE type);
+        void initUpgrade(Ghost* ghost, UniqueGhost* unique_ghost);
+        void handleUpgrade(Ghost* ghost, UniqueGhost* unique_ghost);
+
     private:
         ///Console
         Console* console;
@@ -109,11 +139,22 @@ class PlayingState:
 
         ///Object
         Pacman* pacman;
+
         Blinky* blinky;
+        Deadly* deadly;
+
         Pinky* pinky;
+        Speedy* speedy;
+
         Inky* inky;
+        Invisy* invisy;
+
         Clyde* clyde;
+        Freezy* freezy;
+
         Fruit* fruit;
+
+        Mystery* mystery;
 
         //Dot count
         int cur_dot_count;
