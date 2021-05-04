@@ -8,6 +8,7 @@
 #include "Point.h"
 #include "Direction.h"
 #include "Pacman.h"
+#include "Golden.h"
 #include <string>
 
 ///Labyrinth type
@@ -71,6 +72,8 @@ class Labyrinth
         int isPowerDotHere(Point screen, DIRECTION dir) const;
         void removeDot(Point tile);
         void removeDot(Point screen, DIRECTION dir);
+
+        void generateDot(Point tile, int value);
 
         ///Ghost function:
         Point getGhostStart() const;

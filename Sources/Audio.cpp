@@ -30,6 +30,7 @@ Audio::Audio()
     speed = NULL;
     boss_show_up = NULL;
     upgrade_mystery = NULL;
+    boss_death = NULL;
 
     return;
 }
@@ -110,6 +111,8 @@ void Audio::load()
 
     upgrade_mystery = sound->loadEffect("Assets/Sound/upgrade_mystery.wav");
 
+    boss_death = sound->loadEffect("Assets/Sound/boss_death.wav");
+
     return;
 }
 
@@ -175,6 +178,9 @@ void Audio::play(EFFECT_TYPE effect_type, bool loop, const int channel)
             break;
         case UPGRADE_MYSTERY:
             sound->play(upgrade_mystery, loop, channel);
+            break;
+        case BOSS_DEATH:
+            sound->play(boss_death, loop, channel);
             break;
         default:
             break;
@@ -321,6 +327,8 @@ void Audio::free()
     boss_show_up = NULL;
     Mix_FreeChunk(upgrade_mystery);
     upgrade_mystery = NULL;
+    Mix_FreeChunk(boss_death);
+    boss_death = NULL;
 
     return;
 }

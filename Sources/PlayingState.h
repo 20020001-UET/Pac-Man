@@ -20,6 +20,7 @@
 #include "Invisy.h"
 #include "Freezy.h"
 #include "Mystery.h"
+#include "Golden.h"
 
 ///States of playing
 enum STATE_OF_PLAYING
@@ -49,7 +50,7 @@ enum PLAYING_CONTROL
 const Point SCORE_POINT = Point(160*3, 12*3);
 const Point HIGHSCORE_POINT = Point(80*3, 12*3);
 const Point LIFE_POINT = Point(0*3, 276*3);
-const Point LEVEL_POINT = Point(128*3, 276*3);
+const Point LEVEL_POINT = Point(112*3, 276*3);
 const Point POWER_POINT = Point(0*3, 0*3);
 
 ///Mystery Speech Point
@@ -121,6 +122,10 @@ class PlayingState:
         void initUpgrade(Ghost* ghost, UniqueGhost* unique_ghost);
         void handleUpgrade(Ghost* ghost, UniqueGhost* unique_ghost);
 
+        void handleGoldenMode();
+        void handleGoldenGenerate();
+        void handleGoldenHit();
+
     private:
         ///Console
         Console* console;
@@ -155,6 +160,9 @@ class PlayingState:
         Fruit* fruit;
 
         Mystery* mystery;
+
+        Golden* golden;
+        bool golden_death_state;
 
         //Dot count
         int cur_dot_count;

@@ -5,12 +5,14 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <iostream>
 
 //Constructor:
 GameStatus::GameStatus()
 {
     console = new Console("GameStatus");
     pacman = NULL;
+    golden = NULL;
     graphic = NULL;
 
     scoreObject.clear();
@@ -24,6 +26,7 @@ GameStatus::~GameStatus()
     delete console;
     console = NULL;
     pacman = NULL;
+    golden = NULL;
     graphic = NULL;
 
     scoreObject.clear();
@@ -56,11 +59,21 @@ void GameStatus::init(Pacman* _pacman, Graphic* _graphic, Timer* _timer, Uint32 
 
     curGhostEaten = 0;
 
+    BOSS_HP = 0;
+    damageTaken = 0;
+    healGiven = 0;
+
     for (int index = 0; index < PACMAN_POWER_STATE_TOTAL; index++)
         power[index] = false;
 
     console->writeLine("Initialized done!");
 
+    return;
+}
+
+void GameStatus::initBoss(Golden* _golden)
+{
+    golden = _golden;
     return;
 }
 
@@ -122,10 +135,43 @@ void GameStatus::setGhostEaten(int updateValue)
     return;
 }
 
+void GameStatus::setHP()
+{
+    healGiven = GOLDEN_HP;
+    return;
+}
+
+void GameStatus::updateHP()
+{
+    if (golden->isShowedUp())
+    {
+        if (damageTaken > 0)
+        {
+            BOSS_HP -= 80;
+            damageTaken -= 80;
+        }
+        if (healGiven > 0)
+        {
+            BOSS_HP += 240;
+            healGiven -= 240;
+        }
+    }
+
+    return;
+}
+
+void GameStatus::pushDamage(const int damage_type)
+{
+    damageTaken += GOLDEN_DAMAGE_VALUE[damage_type];
+    return;
+}
+
 ///update loop
 void GameStatus::update()
 {
     updateScore();
+
+    updateHP();
 
     score = pacman->getDotEaten()*10 + bonus;
 
@@ -188,14 +234,25 @@ void GameStatus::render()
     }
 
     //render level
-    destination = {level_point.x, level_point.y, OBJECT_PIXEL, OBJECT_PIXEL};
-    for (int index = level - 6 + 1; index <= level; index++)
+    if (level < 7)
     {
-        if (index >= 0)
+        destination = {level_point.x, level_point.y, OBJECT_PIXEL, OBJECT_PIXEL};
+        for (int index = level - 7 + 1; index <= level; index++)
         {
-            graphic->draw(OBJECT_LEVEL, index, destination);
+            if (index >= 0)
+            {
+                graphic->draw(OBJECT_LEVEL, index, destination);
+            }
+            destination.x += OBJECT_PIXEL;
         }
-        destination.x += OBJECT_PIXEL;
+    }
+    else
+    //render boss HP
+    {
+        if (golden->isShowedUp())
+            graphic->renderHP_Bar(BOSS_HP, GOLDEN_HP, level_point);
+        else
+            graphic->renderHP_Bar(0, GOLDEN_HP, level_point);
     }
 
     //handle animation

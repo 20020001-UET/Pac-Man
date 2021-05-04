@@ -57,6 +57,7 @@ void Labyrinth::load(const std::string path)
 
     if (input.good())
     {
+        dotRemain = 0;
         for (int y = 0; y < LABYRINTH_DATA_HEIGHT; y++)
         {
             for (int x = 0; x < LABYRINTH_DATA_WIDTH; x++)
@@ -305,6 +306,19 @@ void Labyrinth::removeDot(Point screen, DIRECTION dir)
     if (isDot[newTile.x][newTile.y])
         dotRemain--;
     isDot[newTile.x][newTile.y] = false;
+    return;
+}
+
+void Labyrinth::generateDot(Point tile, int value)
+{
+    if (!isDotHere(tile))
+    {
+        dotRemain++;
+        isDot[tile.x][tile.y] = true;
+        powerDot[tile.x][tile.y] = value;
+        if (powerDot[tile.x][tile.y] != 0)
+            data[tile.x][tile.y] = POWER_DOT_DATA;
+    }
     return;
 }
 

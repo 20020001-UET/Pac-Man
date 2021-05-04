@@ -5,9 +5,11 @@
 #include "GhostAi.h"
 #include "FruitAi.h"
 #include "MysteryAi.h"
+#include "GoldenAi.h"
 #include "Distance.h"
 #include <random>
 #include <ctime>
+#include <iostream>
 
 ///PlayingState class
 //Constructor:
@@ -37,6 +39,7 @@ PlayingState::PlayingState() : State()
     fruit = new Fruit;
 
     mystery = new Mystery;
+    golden = new Golden;
 
     gameStatus = new GameStatus;
 
@@ -80,6 +83,8 @@ PlayingState::~PlayingState()
 
     delete mystery;
     mystery = NULL;
+    delete golden;
+    golden = NULL;
 
     delete gameStatus;
     gameStatus = NULL;
@@ -121,8 +126,10 @@ void PlayingState::init(System* _system)
 
     mystery->init(system->graphic, system->timer, Point(-1, 14), Point (13, 17), Point(11, 17), Point(13, 17));
     mystery->setSpeechPoint(MYSTERY_SPEECH_UPGRADE_POINT, MYSTERY_SPEECH_SHOW_UP_POINT);
+    golden->init(system->graphic, system->timer, labyrinth->getGhostStart(), Point(14, 17));
 
     gameStatus->init(pacman, system->graphic, system->timer, system->highscore, HIGHSCORE_POINT, SCORE_POINT, LIFE_POINT, LEVEL_POINT, POWER_POINT);
+    gameStatus->initBoss(golden);
 
     getControl();
 
@@ -163,7 +170,10 @@ void PlayingState::render()
     renderGhost(inky, invisy);
     renderGhost(clyde, freezy);
 
-    mystery->render();
+    if (!golden->isShowedUp())
+        mystery->render();
+    else
+        golden->render();
 
     gameStatus->renderScore();
 
@@ -296,6 +306,7 @@ void PlayingState::initState()
             labyrinth->setAnimated(false);
             gameStatus->setAnimated(false);
             mystery->setState(MYSTERY_INIT);
+            golden->setState(GOLDEN_INIT_STATE);
 
             if (gameStatus->getLevel() == 1)
             {
@@ -403,6 +414,11 @@ void PlayingState::handleState()
                     blinky->setBehavior(GHOST_SCATTER);
                 else
                     deadly->setBehavior(UNIQUE_GHOST_SCATTER);
+
+                golden->setTile(golden->getStartPoint());
+                if (golden->isShowedUp())
+                    golden->setState(GOLDEN_RUNNING_STATE);
+
                 setState(PLAYING_GAME);
             }
             break;
@@ -472,10 +488,26 @@ void PlayingState::handleState()
                     handleGhostMove(freezy, labyrinth);
                 }
 
-                if (mystery->getState() != MYSTERY_WAITING_TO_SHOW_UP && mystery->getState() == MYSTERY_SPEECH_SHOW_UP)
+                if (mystery->getState() == MYSTERY_SPEECH_SHOW_UP && golden->getState() != GOLDEN_SHOW_UP_STATE)
                 {
                     system->audio->stopChannel(0);
-                    system->audio->play(EFFECT_TYPE::BOSS_SHOW_UP, false, -1);
+                    if (!system->audio->isPlayingChannel(-1))
+                        system->audio->play(EFFECT_TYPE::BOSS_SHOW_UP, false, -1);
+                }
+
+                if (mystery->getState() == MYSTERY_WAITING_TO_SHOW_UP && golden->getState() != GOLDEN_SHOW_UP_STATE && !system->audio->isPlayingChannel(-1))
+                {
+                    system->audio->play(EFFECT_TYPE::UPGRADE_MYSTERY, false, -1);
+                    golden->setState(GOLDEN_SHOW_UP_STATE);
+                    gameStatus->setHP();
+                }
+
+                if (golden->getState() == GOLDEN_SHOW_UP_STATE)
+                {
+                    if (!system->audio->isPlayingChannel(-1))
+                    {
+                        setState(NEXT_LEVEL_GAME);
+                    }
                 }
             }
 
@@ -483,12 +515,24 @@ void PlayingState::handleState()
         }
         case PLAYING_GAME:
         {
+            if (golden->isShowedUp())
+            {
+                if (golden->getState() == GOLDEN_DEATH_STATE)
+                {
+                    //std::cout << golden->isDead() << '\n';
+                    golden->handleState();
+                    break;
+                }
+            }
+
             pacman->handlePower();
 
             handleGhostMode(blinky, deadly);
             handleGhostMode(pinky, speedy);
             handleGhostMode(inky, invisy);
             handleGhostMode(clyde, freezy);
+            if (golden->isShowedUp())
+                golden->handleMode();
 
             if (pacman->getState() == PACMAN_EATING_STATE)
             {
@@ -582,12 +626,30 @@ void PlayingState::handleState()
             handleGhostLoop(inky, invisy, blinky, deadly);
             handleGhostLoop(clyde, freezy, blinky, deadly);
 
-            if (labyrinth->isDotOver() || cur_dot_count == 169)
+            ///handle Boss here
+            if (golden->isShowedUp())
+            {
+                handleGoldenMode();
+                handleGoldenGenerate();
+                handleGoldenTarget(golden, pacman, labyrinth);
+                handleGoldenMove(golden, labyrinth);
+                handleGoldenHit();
+
+                if (golden->getHP() <= 0)
+                {
+                    system->audio->play(EFFECT_TYPE::BOSS_DEATH, false, 1);
+                    golden->setState(GOLDEN_DEATH_STATE);
+                    break;
+                }
+            }
+
+            if (labyrinth->isDotOver() || ((cur_dot_count == 151) && gameStatus->getLevel() != 7))
             {
                 setState(WIN_GAME);
                 break;
             }
 
+            ///handle ghost hit
             bool isEndGame = false;
 
             if (!blinky->isUpgraded())
@@ -779,6 +841,10 @@ void PlayingState::handleState()
                     blinky->setBehavior(GHOST_SCATTER);
                 else
                     deadly->setBehavior(UNIQUE_GHOST_SCATTER);
+
+                if (golden->isShowedUp())
+                    golden->setState(GOLDEN_RUNNING_STATE);
+
                 setState(PLAYING_GAME);
             }
             break;
@@ -804,10 +870,19 @@ void PlayingState::handleState()
             if (!system->audio->isPlaying())
             {
                 gameStatus->updateLevel();
-                if (gameStatus->getLevel() > 5 && gameStatus->getLevel() != 7)
-                    setState(NEXT_LEVEL_GAME);
+                if (gameStatus->getLevel() == 8)
+                {
+                    system->saveHighscore(gameStatus->getScore(), gameStatus->getLevel());
+                    pull(WIN_GAME_STATE);
+                }
                 else
-                    setState(UPGRADE_GHOST_GAME);
+                {
+                    if (gameStatus->getLevel() > 5 && gameStatus->getLevel() != 7)
+                        setState(NEXT_LEVEL_GAME);
+                    else
+                        setState(UPGRADE_GHOST_GAME);
+
+                }
             }
             break;
         }
@@ -1000,6 +1075,70 @@ void PlayingState::handleUpgrade(Ghost* ghost, UniqueGhost* unique_ghost)
         system->audio->stopChannel(-1);
         system->audio->unpauseChannel(0);
         setState(NEXT_LEVEL_GAME);
+    }
+    return;
+}
+
+void PlayingState::handleGoldenMode()
+{
+    int distance = DISTANCE::Euclidean(golden->getTile(), pacman->getTile());
+    if (distance <= 1*OBJECT_PIXEL)
+    {
+        if (!golden->isGoldenMode(GOLDEN_SPEED_UP_MODE) && !golden->isGoldenMode(GOLDEN_EXHAUSTED_MODE))
+            golden->setMode(GOLDEN_SPEED_UP_MODE);
+    }
+
+    ///speed up the unique ghost
+    if (golden->getTile() == deadly->getTile())
+    {
+        if (!deadly->isGhostMode(UNIQUE_GHOST_SPEED_UP_MODE))
+            deadly->setMode(UNIQUE_GHOST_SPEED_UP_MODE);
+    }
+
+    if (golden->getTile() == speedy->getTile())
+    {
+        if (!speedy->isGhostMode(UNIQUE_GHOST_SPEED_UP_MODE))
+            speedy->setMode(UNIQUE_GHOST_SPEED_UP_MODE);
+    }
+
+    if (golden->getTile() == invisy->getTile())
+    {
+        if (!invisy->isGhostMode(UNIQUE_GHOST_SPEED_UP_MODE))
+            invisy->setMode(UNIQUE_GHOST_SPEED_UP_MODE);
+    }
+
+    if (golden->getTile() == freezy->getTile())
+    {
+        if (!freezy->isGhostMode(UNIQUE_GHOST_SPEED_UP_MODE))
+            freezy->setMode(UNIQUE_GHOST_SPEED_UP_MODE);
+    }
+
+    return;
+}
+
+void PlayingState::handleGoldenGenerate()
+{
+    if (golden->checkScreen())
+        labyrinth->generateDot(golden->getTile(), golden->dotGenerate());
+    return;
+}
+
+void PlayingState::handleGoldenHit()
+{
+    if (golden->checkCollision(pacman))
+    {
+        if (golden->isGoldenMode(GOLDEN_EXHAUSTED_MODE))
+        {
+            pacman->setState(PACMAN_EATING_STATE);
+            system->audio->play(EFFECT_TYPE::EAT_GHOST, false ,-1);
+            golden->takeDamage(GOLDEN_DAMAGE_HIT);
+            gameStatus->pushDamage(GOLDEN_DAMAGE_HIT);
+            golden->setMode(GOLDEN_NORMAL_MODE);
+        }
+        else
+        {
+
+        }
     }
     return;
 }

@@ -35,6 +35,8 @@ void Pinky::init(Graphic* _graphic, Timer* _timer, Point _start_point, Point _st
 
     upgraded = false;
 
+    stand_val = GHOST_LEFT;
+
     setTile(stand);
     update();
 

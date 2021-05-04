@@ -32,6 +32,7 @@ enum EFFECT_TYPE
     SPEED,
     BOSS_SHOW_UP,
     UPGRADE_MYSTERY,
+    BOSS_DEATH,
     EFFECT_TYPE_TOTAL
 };
 
@@ -111,6 +112,7 @@ class Audio
         Mix_Chunk* speed;
         Mix_Chunk* boss_show_up;
         Mix_Chunk* upgrade_mystery;
+        Mix_Chunk* boss_death;
 
         ///System value
         int musicVolume;

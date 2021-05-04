@@ -37,6 +37,8 @@ void Freezy::init(Graphic* _graphic, Timer* _timer, Point _show_up, Point _start
 
     showed_up = false;
 
+    stand_val = GHOST_RIGHT;
+
     lastPoint.clear();
 
     setMode(UNIQUE_GHOST_NORMAL);

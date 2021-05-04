@@ -40,6 +40,7 @@ class Graphic
         void renderNumber(const NUMBER_TYPE number_type, const std::string number, const Point dest_point);
         void renderText(const std::string& text, const Point dest_point);
         void renderScore(const int sprite_val, const Point score_point);
+        void renderHP_Bar(const Uint16 curHP, const Uint16 maxHP, const Point dest_point);
 
         //set viewport:
         void setViewPort(SDL_Rect viewport);

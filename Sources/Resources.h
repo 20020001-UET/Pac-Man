@@ -127,6 +127,9 @@ enum OBJECT_TYPE
     OBJECT_INVISY,
     OBJECT_FREEZY,
     OBJECT_GOLDEN,
+    OBJECT_GOLDEN_EXHAUTED_DEFAULT,
+    OBJECT_GOLDEN_EXHAUTED_YELLOW,
+    OBJECT_GOLDEN_DEATH,
     OBJECT_TYPE_TOTAL
 };
 
@@ -274,7 +277,16 @@ enum UNIQUE_GHOST_TYPE
     UNIQUE_GHOST_INVISY,
     UNIQUE_GHOST_FREEZY,
     UNIQUE_GHOST_GOLDEN,
+    UNIQUE_GHOST_GOLDEN_EXHAUTED,
+    UNIQUE_GHOST_GOLDEN_DEATH,
     UNIQUE_GHOST_TOTAL
+};
+
+enum UNIQUE_GHOST_GOLDEN_EXHAUTED_TYPE
+{
+    UNIQUE_GHOST_GOLDEN_EXHAUTED_DEFAULT = 0,
+    UNIQUE_GHOST_GOLDEN_EXHAUTED_YELLOW,
+    UNIQUE_GHOST_GOLDEN_EXHAUTED_TOTAL
 };
 
 const int UNIQUE_GHOST_MYSTERY_ANIMATION_FRAME = 2;
@@ -286,6 +298,8 @@ enum UNIQUE_GHOST_MYSTERY_SPRITE
     UNIQUE_GHOST_MYSTERY_UPGRADE_WHITE = 6,
     UNIQUE_GHOST_MYSTERY_SPRITE_TOTAL = 8
 };
+
+const int UNIQUE_GHOST_GOLDEN_DEATH_ANIMATION_FRAME = 8;
 
 enum UNIQUE_GHOST_SPRITE
 {
@@ -318,6 +332,12 @@ const int SPEECH_UPGRADE_HEIGHT = 26*3;
 const int SPEECH_SHOW_UP_TOTAL = 2;
 const int SPEECH_SHOW_UP_WIDTH = 52*3;
 const int SPEECH_SHOW_UP_HEIGHT = 26*3;
+
+///HP bar
+const int HP_BAR_WIDTH = 112*3;
+const int HP_BAR_HEIGHT = 16*3;
+const int HP_WIDTH = 104*3;
+const int HP_HEIGHT = 8*3;
 
 ///Resources class
 class Resources
@@ -358,6 +378,8 @@ class Resources
         SDL_Rect getSprite(const SCORE_TYPE score_type, const int sprite_val);
         SDL_Rect getSprite(const FRUIT_TYPE fruit_type, const int sprite_val = 0);
         SDL_Rect getSprite(const SPEECH_TYPE speech_type, const int sprite_val = 0);
+        SDL_Rect getHP_BarSprite();
+        SDL_Rect getHPSprite(const Uint16 curHP, const Uint16 maxHP);
 
     private:
         ///Console
@@ -396,6 +418,8 @@ class Resources
         SDL_Rect clyde[GHOST_SPRITE_TOTAL];
         SDL_Rect freezy[UNIQUE_GHOST_SPRITE_TOTAL];
         SDL_Rect golden[UNIQUE_GHOST_SPRITE_TOTAL];
+        SDL_Rect golden_exhauted[UNIQUE_GHOST_GOLDEN_EXHAUTED_TOTAL][UNIQUE_GHOST_SPRITE_TOTAL];
+        SDL_Rect golden_death[UNIQUE_GHOST_SPRITE_TOTAL];
         SDL_Rect pacman_death[PACMAN_DEATH_SPRITE_TOTAL];
         SDL_Rect dot[DOT_SPRITE_TOTAL];
         SDL_Rect dot_status[DOT_STATUS_TOTAL];
@@ -408,6 +432,7 @@ class Resources
         SDL_Rect fruit_sprite[FRUIT_TYPE_TOTAL][FRUIT_SPRITE_TOTAL];
         SDL_Rect speech_upgrade[SPEECH_UPGRADE_TOTAL];
         SDL_Rect speech_show_up[SPEECH_SHOW_UP_TOTAL];
+        SDL_Rect HP_bar, health_point;
 
         ///Texture
         Texture* texture;

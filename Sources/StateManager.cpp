@@ -12,6 +12,7 @@
 #include "SaveSettingState.h"
 #include "ExitGameState.h"
 #include "GameOverState.h"
+#include "WinGameState.h"
 
 ///State Manager class
 //Constructor:
@@ -167,7 +168,7 @@ bool StateManager::pullRequest()
                     add(new GameOverState);
                     break;
                 case WIN_GAME_STATE:
-                    //add(new ExitGameState);
+                    add(new WinGameState);
                     break;
                 case RETURN_STATE:
                     {

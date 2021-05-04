@@ -86,6 +86,7 @@ void GameOverState::keyReleased(const int key_code)
     switch (key_code)
     {
         case SDLK_ESCAPE:
+        case SDLK_RETURN:
             pull(MENU_STATE);
             break;
     }

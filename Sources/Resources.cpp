@@ -357,6 +357,47 @@ void Resources::create()
     }
     console->writeLine("Created freezy sprites");
 
+    //Line 5
+    height_sprite++;
+    for (int index = 0; index < UNIQUE_GHOST_SPRITE_TOTAL; index++)
+    {
+        golden[index] = {index*OBJECT_PIXEL, height_sprite*OBJECT_PIXEL, OBJECT_PIXEL, OBJECT_PIXEL};
+    }
+    console->writeLine("Created golden sprites");
+
+    //Line 6 + 7
+    for (int sprite = 0; sprite < UNIQUE_GHOST_GOLDEN_EXHAUTED_TOTAL; sprite++)
+    {
+        height_sprite++;
+        for (int index = 0; index < UNIQUE_GHOST_SPRITE_TOTAL; index++)
+        {
+            golden_exhauted[sprite][index] = {index*OBJECT_PIXEL, height_sprite*OBJECT_PIXEL, OBJECT_PIXEL, OBJECT_PIXEL};
+        }
+    }
+    console->writeLine("Created golden exhauted sprites");
+
+    //Line 8
+    height_sprite++;
+
+    //Line 9
+    height_sprite++;
+
+    //Line 10
+    height_sprite++;
+    for (int index = 0; index < UNIQUE_GHOST_SPRITE_TOTAL; index++)
+    {
+        golden_death[index] = {index*OBJECT_PIXEL, height_sprite*OBJECT_PIXEL, OBJECT_PIXEL, OBJECT_PIXEL};
+    }
+    console->writeLine("Created golden death sprites");
+
+    //Line 11
+    height_sprite++;
+    HP_bar = {0, height_sprite*OBJECT_PIXEL, HP_BAR_WIDTH, HP_BAR_HEIGHT};
+
+    //Line 12
+    height_sprite++;
+    health_point = {0 + 4*3, height_sprite*OBJECT_PIXEL + 4*3, HP_WIDTH, HP_HEIGHT};
+
     ///Speech sprites
     //Line 0
     height_sprite = 0;
@@ -516,6 +557,15 @@ SDL_Rect Resources::getSprite(const OBJECT_TYPE object_type, const int sprite_va
         case OBJECT_GOLDEN:
             tmpRect = golden[sprite_val];
             break;
+        case OBJECT_GOLDEN_EXHAUTED_DEFAULT:
+            tmpRect = golden_exhauted[UNIQUE_GHOST_GOLDEN_EXHAUTED_DEFAULT][sprite_val];
+            break;
+        case OBJECT_GOLDEN_EXHAUTED_YELLOW:
+            tmpRect = golden_exhauted[UNIQUE_GHOST_GOLDEN_EXHAUTED_YELLOW][sprite_val];
+            break;
+        case OBJECT_GOLDEN_DEATH:
+            tmpRect = golden_death[sprite_val];
+            break;
         default:
             break;
     }
@@ -564,6 +614,21 @@ SDL_Rect Resources::getSprite(const SPEECH_TYPE speech_type, const int sprite_va
         default:
             break;
     }
+    return tmpRect;
+}
+
+SDL_Rect Resources::getHP_BarSprite()
+{
+    SDL_Rect tmpRect = {0, 0, 0, 0};
+    tmpRect = HP_bar;
+    return tmpRect;
+}
+
+SDL_Rect Resources::getHPSprite(const Uint16 curHP, const Uint16 maxHP)
+{
+    SDL_Rect tmpRect = {0, 0, 0, 0};
+    tmpRect = health_point;
+    tmpRect.w = tmpRect.w * curHP / maxHP;
     return tmpRect;
 }
 

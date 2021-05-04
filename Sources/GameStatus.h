@@ -8,6 +8,7 @@
 #include "Timer.h"
 #include "System.h"
 #include "Ghost.h"
+#include "Golden.h"
 #include <vector>
 
 const NUMBER_TYPE NUMBER_TYPE_AT[NUMBER_TYPE_TOTAL] = { NUMBER_BLUE, NUMBER_DEFAULT };
@@ -53,6 +54,7 @@ class GameStatus
 
         ///main function:
         void init(Pacman* _pacman, Graphic* _graphic, Timer* _timer, Uint32 _highscore, Point _highscore_point, Point _score_point, Point _life_point, Point _level_point, Point _power_point);
+        void initBoss(Golden* _golden);
 
         ///push score
         void updateScore();
@@ -74,12 +76,20 @@ class GameStatus
         int getLevel();
         void updateLevel();
 
+        ///push hp
+        void setHP();
+        void updateHP();
+        void pushDamage(const int damage_type);
+
     private:
         ///Console
         Console* console;
 
         ///Pacman
         Pacman* pacman;
+
+        ///Boss
+        Golden* golden;
 
         ///System
         Graphic* graphic;
@@ -90,6 +100,10 @@ class GameStatus
         int score_state;
         int pacman_life;
         int level;
+
+        Uint16 damageTaken;
+        Uint16 healGiven;
+        Uint16 BOSS_HP;
 
         ///Pacman power
         bool power[PACMAN_POWER_STATE_TOTAL];

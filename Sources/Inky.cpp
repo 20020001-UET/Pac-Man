@@ -35,6 +35,8 @@ void Inky::init(Graphic* _graphic, Timer* _timer, Point _start_point, Point _sta
 
     upgraded = false;
 
+    stand_val = GHOST_UP;
+
     setTile(stand);
     update();
 
