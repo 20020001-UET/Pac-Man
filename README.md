@@ -32,7 +32,7 @@ Phần Game cổ điển bao gồm:
   - Cách quản lý các thành phần của game
 - Tài nguyên của game:
   - Hình ảnh (texture -> png): Vẽ lại theo game gốc và thêm thắt sáng tạo
-  - Âm thanh (wav): lấy từ game gốc và trên một số nguồn từ (freesound)[http://freesound.org/]
+  - Âm thanh (wav): lấy từ game gốc và trên một số nguồn từ [freesound](http://freesound.org)
 - Thời gian để thu thập những thứ trên
 
 ## References
