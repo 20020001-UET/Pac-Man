@@ -187,3 +187,8 @@ Việc di chuyển của Ghost khá đơn giản:
 
 ## Demo videos
 [Link drive các video demo về game](https://drive.google.com/drive/folders/1wSHAdCgVVikGCHcD1pu0RlE2v475jzOv?usp=sharing)
+Bao gồm 5 video:
+- 2 video về màn chơi Boss
+- 1 video về Menu và Setting của game
+- 1 video về các lần Ghost được nâng cấp
+- 1 video về demo gameplay của game từ level 1
