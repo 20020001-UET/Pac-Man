@@ -32,7 +32,7 @@ Phần Game cổ điển bao gồm:
   - Cách quản lý các thành phần của game
 - Tài nguyên của game:
   - Hình ảnh (texture -> png): Vẽ lại theo game gốc và thêm thắt sáng tạo
-  - Âm thanh (wav): lấy từ game gốc
+  - Âm thanh (wav): lấy từ game gốc và trên một số nguồn từ (freesound)[http://freesound.org/]
 - Thời gian để thu thập những thứ trên
 
 ## References
@@ -70,10 +70,19 @@ Những tính năng mới được thêm vào trong game:
 - Đã thêm tính năng Fruit bonus điểm cho trò chơi
 - Đã random các Big dot trên màn chơi
 - Đã thêm tính năng nhận biết power hiện tại của Pacman
-
-Những tính năng đang trong kế hoạch thêm vào game:
-- 1 Ghost mới tên là Golden là boss chính (kết hợp bởi 4 ghost cũ) có khả năng thả dot nhỏ trên đường đi và khả năng teleport nếu bị bắt. Khi Golden bị bắt đủ 3 lần nó sẽ chuyển sang trạng thái sợ hãi (frightened) và bạn sẽ được phép tấn công Golden. Golden có tổng cộng 3 mạng. 
-- 4 Ghost mới (là bản nâng cấp của 4 Ghost cổ điển)
+- Đã thêm tính năng nhận biết effect xấu hiện tại của Pacman
+- Đã thêm 4 Ghost mới (là bản nâng cấp của 4 Ghost cổ điển):
+  - Deadly
+  - Speedy
+  - Invisy
+  - Freezy
+- Đã thêm Boss cuối của game: Golden (kết hợp bởi 4 ghost cũ):
+  - Có khả năng thả dot nhỏ trên đường đi.
+  - Có Ai né tránh khi Pacman tiến đến gần.
+  - Khả năng tăng tốc khi bị Pacman rình.
+  - Sau 3 lần tăng tốc, Golden sẽ mệt (Exhausted). -> Lúc đó Pacman có khả năng tấn công Golden
+  - Golden có khả năng chịu đựng 5 lần tấn công từ Pacman.
+  - Giết chết Golden bạn sẽ chiến thắng màn chơi!
 
 ## Control
 Người chơi sử dụng 4 phím trên bàn phím để di chuyển Pacman.  
