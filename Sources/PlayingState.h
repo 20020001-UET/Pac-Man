@@ -162,7 +162,6 @@ class PlayingState:
         Mystery* mystery;
 
         Golden* golden;
-        bool golden_death_state;
 
         //Dot count
         int cur_dot_count;
