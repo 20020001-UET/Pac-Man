@@ -102,7 +102,8 @@ void Graphic::draw(const OBJECT_TYPE object_type, const int sprite_val, const SD
     RESOURCES_TYPE resources_type = OBJECT;
     if (object_type == OBJECT_PACMAN || object_type == OBJECT_PACMAN_MS || object_type == OBJECT_PACMAN_ANDROID)
         resources_type = PACMAN;
-    if (object_type == OBJECT_MYSTERY || object_type == OBJECT_DEADLY || object_type == OBJECT_SPEEDY || object_type == OBJECT_INVISY || object_type == OBJECT_FREEZY || object_type == OBJECT_GOLDEN)
+    if (object_type == OBJECT_MYSTERY || object_type == OBJECT_DEADLY || object_type == OBJECT_SPEEDY || object_type == OBJECT_INVISY || object_type == OBJECT_FREEZY
+        || object_type == OBJECT_GOLDEN || object_type == OBJECT_GOLDEN_EXHAUTED_DEFAULT || object_type == OBJECT_GOLDEN_EXHAUTED_YELLOW || object_type == OBJECT_GOLDEN_DEATH)
         resources_type = UNIQUE_GHOST;
 
     SDL_Texture* tmpTexture = resources->getTexture(resources_type);
@@ -172,6 +173,19 @@ void Graphic::renderScore(const int sprite_val, const Point score_dest)
     SDL_Rect dest = {score_dest.x, score_dest.y, SCORE_WIDTH, SCORE_HEIGHT};
     texture->draw(resources->getTexture(RESOURCES_TYPE::SCORE),
                   resources->getSprite(SCORE_DEFAULT, sprite_val),
+                  dest);
+    return;
+}
+
+void Graphic::renderHP_Bar(const Uint16 curHP, const Uint16 maxHP, const Point dest_point)
+{
+    SDL_Rect dest = {dest_point.x, dest_point.y, HP_BAR_WIDTH, HP_BAR_HEIGHT};
+    texture->draw(resources->getTexture(RESOURCES_TYPE::UNIQUE_GHOST),
+                  resources->getHP_BarSprite(),
+                  dest);
+    dest = {dest_point.x + 4*3, dest_point.y + 4*3, HP_WIDTH * curHP / maxHP, HP_HEIGHT};
+    texture->draw(resources->getTexture(RESOURCES_TYPE::UNIQUE_GHOST),
+                  resources->getHPSprite(curHP, maxHP),
                   dest);
     return;
 }

@@ -110,6 +110,7 @@ void Engine::init(const std::string _title, const int _width, const int _height,
 
     ///Load system config
     system->load();
+    system->update();
 
     //Initialize State
     state->init(system);

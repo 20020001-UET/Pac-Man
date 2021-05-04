@@ -35,6 +35,8 @@ void Clyde::init(Graphic* _graphic, Timer* _timer, Point _start_point, Point _st
 
     upgraded = false;
 
+    stand_val = GHOST_RIGHT;
+
     setTile(stand);
     update();
 

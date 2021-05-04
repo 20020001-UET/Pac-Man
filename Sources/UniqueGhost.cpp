@@ -249,8 +249,11 @@ void UniqueGhost::render()
 {
     if (!animated)
     {
-        if (!(!curBehavior.empty() && curBehavior.back() == UNIQUE_GHOST_BEING_EATEN))
-            graphic->draw(type, sprite_val, dest);
+        if (!curBehavior.empty() && curBehavior.back() == UNIQUE_GHOST_STAND)
+            graphic->draw(type, stand_val, dest);
+        else
+            if (!(!curBehavior.empty() && curBehavior.back() == UNIQUE_GHOST_BEING_EATEN))
+                graphic->draw(type, sprite_val, dest);
         return;
     }
 

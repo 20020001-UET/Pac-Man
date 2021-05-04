@@ -1,22 +1,22 @@
-///GameOverState [Source]
-#include "GameOverState.h"
+///WinGameState [Source]
+#include "WinGameState.h"
 
 ///Include header
 #include <sstream>
 
-///GameOverState class
+///WinGameState class
 //Constructor:
-GameOverState::GameOverState() : State()
+WinGameState::WinGameState() : State()
 {
-    console = new Console("GameOver");
+    console = new Console("WinGame");
 
-    background = new Background(BACKGROUND_GAME_OVER);
+    background = new Background(BACKGROUND_WIN_GAME);
 
     return;
 }
 
 //Destructor:
-GameOverState::~GameOverState()
+WinGameState::~WinGameState()
 {
     delete background;
     background = NULL;
@@ -29,24 +29,24 @@ GameOverState::~GameOverState()
 
 ///function:
 //init:
-void GameOverState::init(System* _system)
+void WinGameState::init(System* _system)
 {
     system = _system;
 
     background->init(system->graphic);
 
-    console->writeLine("Initialized GameOverState");
+    console->writeLine("Initialized WinGameState");
     return;
 }
 
 //loop:
-void GameOverState::loop()
+void WinGameState::loop()
 {
     return;
 }
 
 //render:
-void GameOverState::render()
+void WinGameState::render()
 {
     background->render();
 
@@ -59,8 +59,9 @@ void GameOverState::render()
     while (num.size() < 8)
         num = '0' + num;
 
-    system->graphic->renderNumber(NUMBER_DEFAULT, num, SCORE_GAME_OVER_POINT);
+    system->graphic->renderNumber(NUMBER_DEFAULT, num, SCORE_WIN_GAME_POINT);
 
+    /*
     //render level
     int curLevel = system->lastLevel + 1;
     SDL_Rect destination = {LEVEL_GAME_OVER_POINT.x - curLevel*OBJECT_PIXEL/2,
@@ -70,18 +71,19 @@ void GameOverState::render()
         system->graphic->draw(OBJECT_LEVEL, index, destination);
         destination.x += OBJECT_PIXEL;
     }
+    */
 
     return;
 }
 
 //handle key event:
-void GameOverState::keyPressed(const int key_code)
+void WinGameState::keyPressed(const int key_code)
 {
     system->audio->play(EFFECT_TYPE::CREDIT);
     return;
 }
 
-void GameOverState::keyReleased(const int key_code)
+void WinGameState::keyReleased(const int key_code)
 {
     switch (key_code)
     {
@@ -94,7 +96,7 @@ void GameOverState::keyReleased(const int key_code)
 }
 
 //close:
-void GameOverState::close()
+void WinGameState::close()
 {
     console->writeLine("Closing state. . .");
     return;

@@ -35,6 +35,8 @@ void Blinky::init(Graphic* _graphic, Timer* _timer, Point _start_point, Point _s
 
     upgraded = false;
 
+    stand_val = GHOST_DOWN;
+
     setTile(stand);
     update();
 

@@ -35,6 +35,8 @@ void Invisy::init(Graphic* _graphic, Timer* _timer, Point _show_up, Point _start
 
     showed_up = false;
 
+    stand_val = GHOST_UP;
+
     lastPoint.clear();
 
     setMode(UNIQUE_GHOST_NORMAL);

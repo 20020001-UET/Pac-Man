@@ -48,6 +48,8 @@ void HighScoreState::init(System* _system)
     std::multiset<Uint32, std::greater<Uint32>>::iterator it;
     for (it = system->highscore_set.begin(); it != system->highscore_set.end(); ++it)
     {
+        if (cnt == 10)
+            break;
         score[cnt++] = (*it);
     }
 
