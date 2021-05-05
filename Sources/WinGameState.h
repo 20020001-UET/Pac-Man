@@ -10,7 +10,7 @@
 #include "Point.h"
 
 ///Score Point
-const Point SCORE_WIN_GAME_POINT = Point(80*3, 108*3);
+const Point SCORE_WIN_GAME_POINT = Point(80*3, 104*3);
 
 ///WinGameState class
 class WinGameState:
