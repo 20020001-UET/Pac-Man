@@ -192,3 +192,6 @@ Bao gồm 5 video:
 - 1 video về Menu và Setting của game
 - 1 video về các lần Ghost được nâng cấp
 - 1 video về demo gameplay của game từ level 1
+
+## Review
+Sau quãng thời gian dài làm bài tập lớn, em thấy mình tiến bộ hơn rất nhiều về cả kiến thức lẫn tư duy lập trình. Nếu có thêm thời gian e sẽ phát triển game trở nên hoàn thiện hơn ở một số điểm. Theo đánh giá cá nhân, em thấy mình xứng đáng với điểm 10 cho bài tập lớn này.
