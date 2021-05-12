@@ -43,6 +43,7 @@ Phần Game cổ điển bao gồm:
   [Link tới danh sách phát](https://www.youtube.com/watch?v=QQzAHcojEKg&list=PLhfAbcv9cehhkG7ZQK0nfIGJC_C-wSLrx)
 - Tham khảo khung chương trình và cách tổ chức game từ 1 video làm game Pacman của Youtuber: [HexagonNico](https://www.youtube.com/watch?v=4AatUPAXrj8)  
   [Link tới Video](https://www.youtube.com/watch?v=4AatUPAXrj8)
+- Để xây dựng và phát triển các con Ghost trong game, em đã tham khảo một video về Ai của game qua Youtube: [Pac-Man Ghost AI Explained](https://www.youtube.com/watch?v=ataGotQ7ir8)
 - Một số tài liệu về OOP và Pointer trong C++ để hiểu rõ hơn.
 
 ## Overview
