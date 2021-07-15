@@ -10,7 +10,7 @@ Bài tập lớn - Game (môn học: Lập trình Nâng cao - INT2215 6)
 **[References](#references)**  
 **[Overview](#overview)**  
 **[Ghost AI](#ghost-ai)**  
-**[Demo Videos](#demo-videos)**
+**[Demo Videos](#demo-videos)**  
 **[Review](#review)**
 
 ## Started
